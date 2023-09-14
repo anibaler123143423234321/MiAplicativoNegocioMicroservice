@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MiAplicativoNegocioMicroservice</string>
+
+
+    <string name="menu_home">Inicio</string>
+    <string name="menu_gallery">Mis Compras</string>
+    <string name="menu_slideshow">Configuración</string>
+
+</resources>

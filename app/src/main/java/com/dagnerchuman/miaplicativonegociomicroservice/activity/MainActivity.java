@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
@@ -14,10 +15,13 @@ import com.dagnerchuman.miaplicativonegociomicroservice.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImageButton btnMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // Inicializa la Toolbar como ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -27,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Inicializa el ImageView del botón de retroceso
-        ImageView imageViewBack = findViewById(R.id.imageViewBack2);
+        ImageView imageViewBack = findViewById(R.id.imageViewBackUser);
 
         // Agrega un OnClickListener al ImageView para volver a EntradaActivity
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -50,16 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Inicializa las vistas
-        TextView textViewHello = findViewById(R.id.textViewHello);
         TextView textViewEmail = findViewById(R.id.textViewEmail);
         TextView textViewNombre = findViewById(R.id.textViewNombre);
         TextView textViewApellido = findViewById(R.id.textViewApellido);
         TextView textViewTelefono = findViewById(R.id.textViewTelefono);
         TextView textViewUserId = findViewById(R.id.textViewUserId);
         TextView textViewNegocioId = findViewById(R.id.textViewNegocioId);
-
-        // Configura el texto del TextView
-        textViewHello.setText("¡Bienvenido a Mi Aplicativo Negocio Microservice!");
 
         // Recupera los valores del Intent
         String userEmail = getIntent().getStringExtra("userEmail");

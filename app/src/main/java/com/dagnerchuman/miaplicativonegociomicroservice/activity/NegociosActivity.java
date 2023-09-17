@@ -1,30 +1,34 @@
+// NegociosActivity
 package com.dagnerchuman.miaplicativonegociomicroservice.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
+import com.dagnerchuman.miaplicativonegociomicroservice.adapter.NegocioAdapter;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
-import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
-
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
+import java.util.ArrayList;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.List;
-
 public class NegociosActivity extends AppCompatActivity {
 
-    private Button btnVerUsuario;
-    private Button btnVerNegocios;
     private ApiServiceNegocio apiServiceNegocio;
+    private RecyclerView recyclerViewNegocios;
+    private NegocioAdapter negocioAdapter;
+    private ImageView btnRegresar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,27 +36,28 @@ public class NegociosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_negocio);
 
         // Inicializa las vistas
-        btnVerUsuario = findViewById(R.id.btnVerUsuario);
-        btnVerNegocios = findViewById(R.id.btnVerNegocios);
+        recyclerViewNegocios = findViewById(R.id.recyclerViewNegocios);
+        ImageView btnRegresar = findViewById(R.id.btnregresar);
 
-        // Inicializa ApiServiceNegocio utilizando Retrofit
+        // Configura el ApiServiceNegocio usando ConfigApi
+        apiServiceNegocio = ConfigApi.getInstanceNegocio();
 
-        // Configura los eventos click para los botones
-        btnVerUsuario.setOnClickListener(new View.OnClickListener() {
+        // Configura el RecyclerView y su adaptador
+        recyclerViewNegocios.setLayoutManager(new LinearLayoutManager(this));
+
+        // Inicializa el adaptador con una lista vacía
+        negocioAdapter = new NegocioAdapter(new ArrayList<>());
+        recyclerViewNegocios.setAdapter(negocioAdapter);
+
+        // Obtén y muestra la lista de negocios
+        obtenerYMostrarNegocios();
+
+        // Agrega un OnClickListener al botón de retroceso
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Aquí debes implementar la lógica para ver la información del usuario
-                // Puedes redirigir a MainActivity o cualquier otra actividad que desees
-                // Por ejemplo:
-                startActivity(new Intent(NegociosActivity.this, MainActivity.class));
-            }
-        });
-
-        btnVerNegocios.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Obtener y mostrar el listado de negocios
-                obtenerYMostrarNegocios();
+                // Acción de retroceso aquí (por ejemplo, finish() para cerrar la actividad actual)
+                finish();
             }
         });
     }
@@ -66,7 +71,8 @@ public class NegociosActivity extends AppCompatActivity {
             public void onResponse(Call<List<Negocio>> call, Response<List<Negocio>> response) {
                 if (response.isSuccessful()) {
                     List<Negocio> negocios = response.body();
-                    // Puedes mostrar la lista de negocios en una nueva actividad o en un RecyclerView, según tus necesidades.
+                    // Actualiza el adaptador con la lista de negocios
+                    negocioAdapter.updateData(negocios);
                 } else {
                     Toast.makeText(NegociosActivity.this, "Error al obtener los negocios", Toast.LENGTH_SHORT).show();
                 }

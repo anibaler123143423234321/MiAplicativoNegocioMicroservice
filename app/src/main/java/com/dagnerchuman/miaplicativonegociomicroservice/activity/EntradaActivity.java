@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.User;
@@ -14,6 +16,7 @@ public class EntradaActivity extends AppCompatActivity {
 
     private Button btnVerUsuario;
     private Button btnVerNegocios;
+    private ImageButton btnBackToLogin; // Nuevo botón
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public class EntradaActivity extends AppCompatActivity {
         // Inicializa las vistas
         btnVerUsuario = findViewById(R.id.btnVerUsuario);
         btnVerNegocios = findViewById(R.id.btnVerNegocios);
+        btnBackToLogin = findViewById(R.id.btnBackToLogin); // Inicializa el nuevo botón
 
         // Recupera los datos del usuario desde SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
@@ -55,7 +59,16 @@ public class EntradaActivity extends AppCompatActivity {
 
 
 
-
+        // Configura el evento click para el botón de regreso
+        btnBackToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Regresa a LoginActivity
+                Intent loginIntent = new Intent(EntradaActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+                finish(); // Cierra EntradaActivity para que el usuario no pueda volver atrás
+            }
+        });
 
 
 

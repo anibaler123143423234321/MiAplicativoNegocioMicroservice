@@ -1,26 +1,27 @@
-package com.dagnerchuman.miaplicativonegociomicroservice.api;
+    package com.dagnerchuman.miaplicativonegociomicroservice.api;
 
-import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
-import retrofit2.Call;
-import retrofit2.http.*;
+    import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
 
-import java.util.List;
+    import retrofit2.Call;
+    import retrofit2.http.*;
 
-public interface ApiServiceNegocio {
-    String baseUser = "gateway/negocios";
+    import java.util.List;
 
-    @POST(baseUser + "/")
-    Call<Negocio> saveNegocio(@Body Negocio negocio);
+    public interface ApiServiceNegocio {
+        String baseUser = "gateway/negocios";
 
-    @GET(baseUser + "/{id}")
-    Call<Negocio> getNegocioById(@Path("id") Long id);
+        @POST(baseUser + "/")
+        Call<Negocio> saveNegocio(@Body Negocio negocio);
 
-    @GET(baseUser + "/")
-    Call<List<Negocio>> getAllNegocios();
+        @GET(baseUser + "/{id}")
+        Call<Negocio> getNegocioById(@Path("id") Long id);
 
-    @PUT(baseUser + "/{id}")
-    Call<Negocio> updateNegocio(@Path("id") Long id, @Body Negocio negocio);
+        @GET(baseUser + "/")
+        Call<List<Negocio>> getAllNegocios();
 
-    @DELETE(baseUser + "/{id}")
-    Call<Void> deleteNegocio(@Path("id") Long id);
-}
+        @PUT(baseUser + "/{id}")
+        Call<Negocio> updateNegocio(@Path("id") Long id, @Body Negocio negocio);
+
+        @DELETE(baseUser + "/{id}")
+        Call<Void> deleteNegocio(@Path("id") Long id);
+    }

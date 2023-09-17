@@ -14,6 +14,7 @@ public class User {
     private String token;
     private Long negocioId;
 
+
     public Long getId() {
         return id;
     }

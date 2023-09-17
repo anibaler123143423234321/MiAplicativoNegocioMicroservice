@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -159,4 +160,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+    public void onClickSignUp(View view) {
+        // Crea un Intent para iniciar RegisterActivity
+        Intent registerIntent = new Intent(this, RegisterActivity.class);
+        startActivity(registerIntent);
+    }
+
 }

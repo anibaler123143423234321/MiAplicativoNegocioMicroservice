@@ -17,54 +17,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ImageView para el botón de retroceso -->
-    <ImageView
-        android:id="@+id/imageViewBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_salir"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textViewHello"
-        android:contentDescription="Botón de Retroceso" />
+
 
     <!-- ImageView para el botón de retroceso -->
     <ImageView
-        android:id="@+id/imageViewBack2"
+        android:id="@+id/imageViewBackUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_salir"
+        android:src="@android:drawable/ic_menu_revert"
+        android:contentDescription="Botón de Retroceso"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textViewHello"
-        android:contentDescription="Botón de Retroceso" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp" />
 
-    <!-- TextView para mostrar el email del usuario -->
-    <TextView
-        android:id="@+id/textViewHello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello, World!"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewBack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textViewEmail" />
 
-    <!-- TextView para mostrar el email del usuario -->
     <TextView
         android:id="@+id/textViewEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
         android:text="Email: "
-        app:layout_constraintTop_toBottomOf="@+id/textViewHello"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.474"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- TextView para mostrar el nombre del usuario -->
     <TextView
         android:id="@+id/textViewNombre"
         android:layout_width="wrap_content"

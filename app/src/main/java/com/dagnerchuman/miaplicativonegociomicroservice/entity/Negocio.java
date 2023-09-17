@@ -39,4 +39,10 @@ public class Negocio {
     public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+
+    // Sobrescribe el método toString para mostrar el nombre del negocio en el Spinner
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Título para el nombre del negocio -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre del Negocio"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Campo para mostrar el nombre del negocio -->
+    <TextView
+        android:id="@+id/txtNombreNegocio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Título para la dirección del negocio -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dirección del Negocio"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Campo para mostrar la dirección del negocio -->
+    <TextView
+        android:id="@+id/txtDireccionNegocio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Otros campos del negocio -->
+    <!-- Puedes agregar más TextViews u otros elementos aquí para mostrar otros detalles del negocio -->
+
+</LinearLayout>

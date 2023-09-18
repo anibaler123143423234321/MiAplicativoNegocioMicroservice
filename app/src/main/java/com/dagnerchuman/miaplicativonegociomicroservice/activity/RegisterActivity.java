@@ -1,26 +1,33 @@
 package com.dagnerchuman.miaplicativonegociomicroservice.activity;
 
 import android.Manifest;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiService;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,9 +46,11 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText editTextUsername;
     private TextInputLayout textInputLayoutPassword;
     private TextInputEditText editTextPassword;
-    private TextInputLayout textInputLayoutNegocioId;
-    private TextInputEditText editTextNegocioId;
+    private Spinner spinnerNegocios;
     private Button buttonSignUp;
+    private List<Negocio> listaNegocios;
+    private Long selectedNegocioId = null;
+    private ImageButton btnBackToLogin; // Nuevo botón
 
     private static final int REQUEST_INTERNET_PERMISSION = 123;
 
@@ -50,22 +59,44 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Inicializa las vistas
+
+
+        // Inicializa las vistas y otros elementos
+        spinnerNegocios = findViewById(R.id.spinnerNegocios);
         textInputLayoutNombre = findViewById(R.id.textInputLayoutNombre);
         textInputLayoutApellido = findViewById(R.id.textInputLayoutApellido);
         textInputLayoutTelefono = findViewById(R.id.textInputLayoutTelefono);
         textInputLayoutEmail = findViewById(R.id.textInputLayoutEmail);
         textInputLayoutUsername = findViewById(R.id.textInputLayoutUsername);
         textInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
-        textInputLayoutNegocioId = findViewById(R.id.textInputLayoutNegocioId);
         editTextNombre = findViewById(R.id.editTextNombre);
         editTextApellido = findViewById(R.id.editTextApellido);
         editTextTelefono = findViewById(R.id.editTextTelefono);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
-        editTextNegocioId = findViewById(R.id.editTextNegocioId);
         buttonSignUp = findViewById(R.id.buttonSignUp);
+// ...
+
+// Obtén una referencia al botón "Regresar a Login"
+        btnBackToLogin = findViewById(R.id.btnBackToLogin);
+
+// Configura el evento click para el botón "Regresar a Login"
+        btnBackToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("MiApp", "Clic en el botón 'Regresar a Login'");
+
+                // Resto del código para iniciar LoginActivity y cerrar la actividad actual
+                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+                finish();
+            }
+        });
+
+
+// Resto del código onCreate
+
 
         // Verifica si tienes permiso de acceso a Internet
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
@@ -81,23 +112,40 @@ public class RegisterActivity extends AppCompatActivity {
             String email = editTextEmail.getText().toString();
             String username = editTextUsername.getText().toString();
             String password = editTextPassword.getText().toString();
-            String negocioIdStr = editTextNegocioId.getText().toString();
-
-            // Convierte el valor de negocioId de String a Long
-            Long negocioId;
-            try {
-                negocioId = Long.parseLong(negocioIdStr);
-            } catch (NumberFormatException e) {
-                negocioId = 0L; // O asigna el valor predeterminado que desees en caso de error
-            }
 
             // Realiza la solicitud de registro
-            performSignUp(nombre, apellido, telefono, email, username, password, negocioId);
+            performSignUp(nombre, apellido, telefono, email, username, password);
         });
+
+
+
+        // Configura el evento de selección del Spinner
+        spinnerNegocios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Obtén el negocio seleccionado y su ID
+                selectedNegocioId = listaNegocios.get(position).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Aquí puedes manejar el caso en que no se ha seleccionado nada en el Spinner
+                selectedNegocioId = null;
+            }
+        });
+
+        // Obtén la lista de negocios y configura el Spinner
+        getNegociosAndSetupSpinner();
     }
 
     // Método para realizar la solicitud de registro
-    private void performSignUp(String nombre, String apellido, String telefono, String email, String username, String password, Long negocioId) {
+    private void performSignUp(String nombre, String apellido, String telefono, String email, String username, String password) {
+        // Verifica que se haya seleccionado un negocio
+        if (selectedNegocioId == null) {
+            Toast.makeText(this, "Selecciona un negocio válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Obtén la instancia de ApiService de ConfigApi
         ApiService apiService = ConfigApi.getInstance();
 
@@ -109,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
         user.setEmail(email);
         user.setUsername(username);
         user.setPassword(password);
-        user.setNegocioId(negocioId);
+        user.setNegocioId(selectedNegocioId); // Usa el negocio seleccionado
 
         // Realiza la solicitud de registro
         Call<User> call = apiService.signUp(user);
@@ -154,5 +202,36 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d("MiApp", "Después de la solicitud de registro");
     }
 
-    // ... Otros métodos como onRequestPermissionsResult pueden ir aquí
+    // Método para obtener la lista de negocios y configurar el Spinner
+    private void getNegociosAndSetupSpinner() {
+        ApiServiceNegocio apiServiceNegocio = ConfigApi.getInstanceNegocio();
+
+        Call<List<Negocio>> call = apiServiceNegocio.getAllNegocios();
+
+        call.enqueue(new Callback<List<Negocio>>() {
+            @Override
+            public void onResponse(Call<List<Negocio>> call, Response<List<Negocio>> response) {
+                if (response.isSuccessful()) {
+                    listaNegocios = response.body();
+
+                    // Configura el adaptador para el Spinner
+                    ArrayAdapter<Negocio> adapter = new ArrayAdapter<>(RegisterActivity.this, android.R.layout.simple_spinner_item, listaNegocios);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerNegocios.setAdapter(adapter);
+                } else {
+                    // Maneja el caso en que no se pudo obtener la lista de negocios
+                    Toast.makeText(RegisterActivity.this, "Error al obtener la lista de negocios", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Negocio>> call, Throwable t) {
+                // Maneja el error de la solicitud de red aquí
+                Log.e("MiApp", "Error en la solicitud: " + t.getMessage());
+                Toast.makeText(RegisterActivity.this, "Error en la solicitud: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }

@@ -36,6 +36,9 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
+        <activity
+            android:name=".activity.ConfiguracionActivity">
+        </activity>
 
         <!-- Actividad de inicio de sesión (LoginActivity) -->
         <activity

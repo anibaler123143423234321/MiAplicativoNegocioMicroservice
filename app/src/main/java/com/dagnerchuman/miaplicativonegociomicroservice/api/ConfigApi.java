@@ -9,6 +9,8 @@ public class ConfigApi {
     private static ApiService apiService;
     private static ApiServiceNegocio apiServiceNegocio;
 
+    private static ApiServiceProductos apiServiceProducto;
+
     public static ApiService getInstance() {
         if (apiService == null) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -33,5 +35,16 @@ public class ConfigApi {
         return apiServiceNegocio;
     }
 
+    public static ApiServiceProductos getInstanceProducto() {
+        if (apiServiceProducto == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            apiServiceProducto = retrofit.create(ApiServiceProductos.class);
+        }
+        return apiServiceProducto;
+    }
 
 }

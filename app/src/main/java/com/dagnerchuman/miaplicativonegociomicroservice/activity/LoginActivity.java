@@ -102,13 +102,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Pasa la información del usuario de LoginActivity  a MainActivity y abre la nueva actividad
                         Intent entradaIntent = new Intent(LoginActivity.this, EntradaActivity.class);
-                        entradaIntent.putExtra("userEmail", user.getEmail());
-                        entradaIntent.putExtra("userName", user.getNombre());
-                        entradaIntent.putExtra("userApellido", user.getApellido());
-                        entradaIntent.putExtra("userTelefono", user.getTelefono());
-                        entradaIntent.putExtra("userFechaCreacion", user.getFechaCreacion());
-                        entradaIntent.putExtra("userId", user.getId());
-                        entradaIntent.putExtra("userNegocioId", user.getNegocioId());
+                      //  entradaIntent.putExtra("userEmail", user.getEmail());
+                       // entradaIntent.putExtra("userName", user.getNombre());
+                        // entradaIntent.putExtra("userApellido", user.getApellido());
+                        //   entradaIntent.putExtra("userTelefono", user.getTelefono());
+                        //  entradaIntent.putExtra("userFechaCreacion", user.getFechaCreacion());
+                        //   entradaIntent.putExtra("userId", user.getId());
+                        //  entradaIntent.putExtra("userNegocioId", user.getNegocioId());
 
                         // Guarda los datos del usuario en SharedPreferences
                         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);

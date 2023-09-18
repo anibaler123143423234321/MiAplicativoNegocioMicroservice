@@ -1,34 +1,57 @@
-// EntradaActivity
 package com.dagnerchuman.miaplicativonegociomicroservice.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
-import com.dagnerchuman.miaplicativonegociomicroservice.entity.User;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
+import com.dagnerchuman.miaplicativonegociomicroservice.adapter.ProductoAdapter;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceProductos;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EntradaActivity extends AppCompatActivity {
 
-    private Button btnVerUsuario;
-    private Button btnVerNegocios;
-    private ImageButton btnBackToLogin; // Nuevo botón
+    private ImageButton btnBackToLogin;
+    private ImageButton btnNavigation;
+
+    private RecyclerView recyclerViewProductos;
+
+    private ProductoAdapter adapter;
+    private List<Producto> productosList;
+
+    private AlertDialog popupDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrada);
 
-        // Inicializa las vistas
-        btnVerUsuario = findViewById(R.id.btnVerUsuario);
-        btnVerNegocios = findViewById(R.id.btnVerNegocios);
-        btnBackToLogin = findViewById(R.id.btnBackToLogin); // Inicializa el nuevo botón
+        btnBackToLogin = findViewById(R.id.btnBackToLogin);
+        recyclerViewProductos = findViewById(R.id.recyclerViewProductos);
+        btnNavigation = findViewById(R.id.btnNavigation);
 
-        // Recupera los datos del usuario desde SharedPreferences
+        recyclerViewProductos.setLayoutManager(new LinearLayoutManager(this));
+        productosList = new ArrayList<>();
+        adapter = new ProductoAdapter(this, productosList);
+        recyclerViewProductos.setAdapter(adapter);
+
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
         String userEmail = sharedPreferences.getString("userEmail", "");
         String userName = sharedPreferences.getString("userName", "");
@@ -37,58 +60,48 @@ public class EntradaActivity extends AppCompatActivity {
         Long userId = sharedPreferences.getLong("userId", -1);
         Long userNegocioId = sharedPreferences.getLong("userNegocioId", -1);
 
-
-        // Configura los eventos click para los botones
-        btnVerUsuario.setOnClickListener(new View.OnClickListener() {
+        btnNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Configura los datos del usuario en el Intent
-                Intent mainIntent = new Intent(EntradaActivity.this, MainActivity.class);
-                mainIntent.putExtra("userEmail", userEmail);
-                mainIntent.putExtra("userName", userName);
-                mainIntent.putExtra("userApellido", userApellido);
-                mainIntent.putExtra("userTelefono", userTelefono);
-                mainIntent.putExtra("userId", userId);
-                mainIntent.putExtra("userNegocioId", userNegocioId);
-
-                // Iniciar MainActivity con startActivityForResult
-                startActivity(mainIntent);
+                mostrarPopupMisDatos();
             }
         });
 
-
-
-
-        // Configura el evento click para el botón de regreso
         btnBackToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Regresa a LoginActivity
                 Intent loginIntent = new Intent(EntradaActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
-                finish(); // Cierra EntradaActivity para que el usuario no pueda volver atrás
+                finish();
             }
         });
 
-
-
-        btnVerNegocios.setOnClickListener(new View.OnClickListener() {
+        ApiServiceProductos apiService = ConfigApi.getInstanceProducto();
+        Call<List<Producto>> call = apiService.getAllProductos();
+        call.enqueue(new Callback<List<Producto>>() {
             @Override
-            public void onClick(View view) {
-                // Aquí debes implementar la lógica para ver la lista de negocios
-                // Puedes redirigir a una actividad donde muestres la lista de negocios
-                // Por ejemplo:
-                startActivity(new Intent(EntradaActivity.this, NegociosActivity.class));
+            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
+                if (response.isSuccessful()) {
+                    List<Producto> primerosProductos = response.body().subList(0, Math.min(10, response.body().size()));
+                    productosList.addAll(primerosProductos);
+                    adapter.notifyDataSetChanged();
+                    Log.d("API Response", "Response successful");
+                } else {
+                    Log.e("API Response", "Response not successful: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Producto>> call, Throwable t) {
+                Log.e("API Failure", "API request failed", t);
             }
         });
     }
 
-    // Método para recibir resultados de MainActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            // Actualiza los datos del usuario según los resultados recibidos de MainActivity
             if (data != null) {
                 String userEmail = data.getStringExtra("userEmail");
                 String userName = data.getStringExtra("userName");
@@ -96,10 +109,54 @@ public class EntradaActivity extends AppCompatActivity {
                 String userTelefono = data.getStringExtra("userTelefono");
                 Long userId = data.getLongExtra("userId", -1);
                 Long userNegocioId = data.getLongExtra("userNegocioId", -1);
-
-                // Puedes actualizar tus vistas con los nuevos datos aquí
             }
         }
+    }
+
+    private void mostrarPopupMisDatos() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (popupDialog != null && popupDialog.isShowing()) {
+                    popupDialog.dismiss();
+                }
+            }
+        });
+
+        // Agregar el botón "Ver Mis Datos" al diálogo emergente
+        alertDialogBuilder.setNeutralButton("Ver Mis Datos", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                verMisDatos(null); // Llamar al método verMisDatos
+            }
+        });
+
+        // Agregar el botón "Ver Negocios" al diálogo emergente
+        alertDialogBuilder.setNegativeButton("Ver Negocios", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                verNegocios(null); // Llamar al método verNegocios
+            }
+        });
+
+        popupDialog = alertDialogBuilder.create();
+        popupDialog.show();
+    }
+
+
+    // Método para manejar el clic del botón "Ver Mis Datos"
+    public void verMisDatos(View view) {
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
+    }
+
+    // Método para manejar el clic del botón "Ver Negocios"
+    public void verNegocios(View view) {
+        Intent mainIntentN = new Intent(this, NegociosActivity.class);
+        startActivity(mainIntentN);
     }
 
 }

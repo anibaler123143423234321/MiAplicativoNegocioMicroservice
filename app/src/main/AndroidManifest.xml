@@ -36,9 +36,12 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
+
         <activity
-            android:name=".activity.ConfiguracionActivity">
+            android:name=".activity.ComprarActivity"
+            android:label="Comprar Activity">
         </activity>
+
 
         <!-- Actividad de inicio de sesión (LoginActivity) -->
         <activity

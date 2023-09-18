@@ -53,12 +53,10 @@ public class EntradaActivity extends AppCompatActivity {
         recyclerViewProductos.setAdapter(adapter);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
-        String userEmail = sharedPreferences.getString("userEmail", "");
-        String userName = sharedPreferences.getString("userName", "");
-        String userApellido = sharedPreferences.getString("userApellido", "");
-        String userTelefono = sharedPreferences.getString("userTelefono", "");
-        Long userId = sharedPreferences.getLong("userId", -1);
         Long userNegocioId = sharedPreferences.getLong("userNegocioId", -1);
+
+        // Llama a la API para obtener los productos del mismo negocio que el usuario
+        obtenerProductosDelNegocio(userNegocioId);
 
         btnNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,16 +73,33 @@ public class EntradaActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
+    // Método para obtener los productos del mismo negocio que el usuario
+    private void obtenerProductosDelNegocio(Long userNegocioId) {
         ApiServiceProductos apiService = ConfigApi.getInstanceProducto();
+
         Call<List<Producto>> call = apiService.getAllProductos();
+
         call.enqueue(new Callback<List<Producto>>() {
             @Override
             public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
                 if (response.isSuccessful()) {
-                    List<Producto> primerosProductos = response.body().subList(0, Math.min(10, response.body().size()));
-                    productosList.addAll(primerosProductos);
+                    List<Producto> productos = response.body();
+
+                    // Filtra los productos que pertenecen al mismo negocio que el usuario
+                    List<Producto> productosDelNegocio = new ArrayList<>();
+                    for (Producto producto : productos) {
+                        if (producto.getNegocioId().equals(userNegocioId)) {
+                            productosDelNegocio.add(producto);
+                        }
+                    }
+
+                    // Actualiza la lista de productos en el adaptador
+                    productosList.clear();
+                    productosList.addAll(productosDelNegocio);
                     adapter.notifyDataSetChanged();
+
                     Log.d("API Response", "Response successful");
                 } else {
                     Log.e("API Response", "Response not successful: " + response.code());
@@ -97,6 +112,7 @@ public class EntradaActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

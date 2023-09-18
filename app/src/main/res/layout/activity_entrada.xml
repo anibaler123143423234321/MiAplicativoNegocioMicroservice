@@ -31,7 +31,7 @@
             android:id="@+id/btnBackToLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_salir"
+            android:src="@drawable/ic_volver_atras"
             android:contentDescription="Regresar a Login"
             android:background="?android:attr/selectableItemBackground"
             android:padding="8dp" />

@@ -1,9 +1,20 @@
 <!-- item_producto.xml -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp"> <!-- Agregamos margen a todos los lados -->
+
+    <!-- Agregar una ImageView para mostrar la imagen del producto -->
+
+    <ImageView
+        android:id="@+id/imgProducto"
+        android:layout_width="85dp"
+        android:layout_height="75dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="Imagen del producto"
+        android:src="@drawable/ic_documento" />
 
     <TextView
         android:id="@+id/txtNombre"
@@ -18,8 +29,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Precio: $0.00"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:layout_below="@id/txtNombre"
+        android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
 
     <!-- Agrega otras vistas según tus necesidades -->
 
-</LinearLayout>
+    <!-- Botón Comprar -->
+    <Button
+        android:id="@+id/btnComprar"
+        android:layout_width="60dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="33dp"
+        android:background="@drawable/ic_add_item"
+        android:text="Comprar"
+         android:layout_marginTop="12dp"/>
+
+</RelativeLayout>

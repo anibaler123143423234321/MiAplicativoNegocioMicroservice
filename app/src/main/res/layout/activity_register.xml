@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_salir"
+            android:src="@drawable/ic_volver_atras"
             android:padding="16dp" />
 
         <!-- Resto de elementos de la Toolbar, como el título -->

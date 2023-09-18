@@ -11,6 +11,7 @@ public class ConfigApi {
 
     private static ApiServiceProductos apiServiceProducto;
 
+    private static ApiServiceCompras apiServiceCompra;
     public static ApiService getInstance() {
         if (apiService == null) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -47,4 +48,15 @@ public class ConfigApi {
         return apiServiceProducto;
     }
 
+    public static ApiServiceCompras getInstanceCompra() {
+        if (apiServiceProducto == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            apiServiceCompra = retrofit.create(ApiServiceCompras.class);
+        }
+        return apiServiceCompra;
+    }
 }

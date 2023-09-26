@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -77,7 +78,7 @@ public class EntradaActivity extends AppCompatActivity {
 
     // Método para obtener los productos del mismo negocio que el usuario
     private void obtenerProductosDelNegocio(Long userNegocioId) {
-        ApiServiceProductos apiService = ConfigApi.getInstanceProducto();
+        ApiServiceProductos apiService = ConfigApi.getInstanceProducto(this);
 
         Call<List<Producto>> call = apiService.getAllProductos();
 
@@ -113,30 +114,13 @@ public class EntradaActivity extends AppCompatActivity {
         });
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            if (data != null) {
-                String userEmail = data.getStringExtra("userEmail");
-                String userName = data.getStringExtra("userName");
-                String userApellido = data.getStringExtra("userApellido");
-                String userTelefono = data.getStringExtra("userTelefono");
-                Long userId = data.getLongExtra("userId", -1);
-                Long userNegocioId = data.getLongExtra("userNegocioId", -1);
-            }
-        }
-    }
-
     private void mostrarPopupMisDatos() {
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         alertDialogBuilder.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (popupDialog != null && popupDialog.isShowing()) {
+                if (popupDialog != null && popupDialog.isShowing()) { // Aquí se corrigió el error
                     popupDialog.dismiss();
                 }
             }
@@ -146,7 +130,7 @@ public class EntradaActivity extends AppCompatActivity {
         alertDialogBuilder.setNeutralButton("Ver Mis Datos", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                verMisDatos(null); // Llamar al método verMisDatos
+                verMisDatos();
             }
         });
 
@@ -154,7 +138,7 @@ public class EntradaActivity extends AppCompatActivity {
         alertDialogBuilder.setNegativeButton("Ver Negocios", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                verNegocios(null); // Llamar al método verNegocios
+                verNegocios();
             }
         });
 
@@ -164,15 +148,14 @@ public class EntradaActivity extends AppCompatActivity {
 
 
     // Método para manejar el clic del botón "Ver Mis Datos"
-    public void verMisDatos(View view) {
+    private void verMisDatos() {
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
     }
 
     // Método para manejar el clic del botón "Ver Negocios"
-    public void verNegocios(View view) {
+    private void verNegocios() {
         Intent mainIntentN = new Intent(this, NegociosActivity.class);
         startActivity(mainIntentN);
     }
-
 }

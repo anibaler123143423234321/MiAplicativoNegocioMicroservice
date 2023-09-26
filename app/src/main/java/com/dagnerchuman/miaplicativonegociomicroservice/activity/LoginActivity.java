@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     // Método para realizar la solicitud de inicio de sesión
     private void performSignIn(String email, String password) {
         // Obtén la instancia de ApiService de ConfigApi
-        ApiService apiService = ConfigApi.getInstance();
+        ApiService apiService = ConfigApi.getInstance(this);
 
         // Crea un objeto Usuario para la solicitud
         User usuario = new User();
@@ -113,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Guarda los datos del usuario en SharedPreferences
                         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putString("userToken", token);
                         editor.putString("userEmail", userEmail);
                         editor.putString("userName", userName);
                         editor.putString("userApellido", userApellido);

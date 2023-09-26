@@ -40,7 +40,7 @@ public class NegociosActivity extends AppCompatActivity {
         ImageView btnRegresar = findViewById(R.id.btnregresar);
 
         // Configura el ApiServiceNegocio usando ConfigApi
-        apiServiceNegocio = ConfigApi.getInstanceNegocio();
+        apiServiceNegocio = ConfigApi.getInstanceNegocio(this);
 
         // Configura el RecyclerView y su adaptador
         recyclerViewNegocios.setLayoutManager(new LinearLayoutManager(this));

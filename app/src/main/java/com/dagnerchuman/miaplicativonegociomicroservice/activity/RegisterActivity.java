@@ -147,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Obtén la instancia de ApiService de ConfigApi
-        ApiService apiService = ConfigApi.getInstance();
+        ApiService apiService = ConfigApi.getInstance(this);
 
         // Crea un objeto Usuario para la solicitud
         User user = new User();
@@ -204,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Método para obtener la lista de negocios y configurar el Spinner
     private void getNegociosAndSetupSpinner() {
-        ApiServiceNegocio apiServiceNegocio = ConfigApi.getInstanceNegocio();
+        ApiServiceNegocio apiServiceNegocio = ConfigApi.getInstanceNegocio(this);
 
         Call<List<Negocio>> call = apiServiceNegocio.getAllNegocios();
 

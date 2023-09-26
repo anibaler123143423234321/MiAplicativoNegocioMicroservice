@@ -2,12 +2,14 @@ package com.dagnerchuman.miaplicativonegociomicroservice.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,7 +46,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
         // Configura los datos del producto en las vistas del ViewHolder
         holder.txtNombre.setText(producto.getNombre());
-        holder.txtPrecio.setText(String.valueOf(producto.getPrecio()));
+        holder.txtPrecio.setText("$" + producto.getPrecio());
 
         // Carga la imagen desde Firebase Storage utilizando Glide
         RequestOptions requestOptions = new RequestOptions()
@@ -61,13 +63,36 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navegar a la actividad ComprarActivity
-                Intent intent = new Intent(context, ComprarActivity.class);
-                // Puedes pasar datos adicionales a la actividad si es necesario
-                intent.putExtra("producto_id", producto.getId());
-                context.startActivity(intent);
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    Producto productoSeleccionado = productosList.get(adapterPosition);
+                    long productoId = productoSeleccionado.getId();
+                    String nombreProducto = productoSeleccionado.getNombre();
+                    double precioProducto = productoSeleccionado.getPrecio();
+                    String imagenProducto = productoSeleccionado.getPicture();
+
+                    // Obtiene el ID del usuario desde SharedPreferences
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
+                    long userId = sharedPreferences.getLong("userId", -1);
+
+                    if (userId != -1) {
+                        // Crea un Intent para iniciar ComprarActivity y pasa los datos del producto y el userId como extras
+                        Intent intent = new Intent(context, ComprarActivity.class);
+                        intent.putExtra("userId", userId);
+                        intent.putExtra("productoId", productoId);
+                        intent.putExtra("nombreProducto", nombreProducto);
+                        intent.putExtra("precioProducto", precioProducto);
+                        intent.putExtra("imagenProducto", imagenProducto);
+                        context.startActivity(intent);
+                    } else {
+                        // El ID del usuario no está disponible en SharedPreferences, maneja esto según tus necesidades
+                        // Puede ser que el usuario no haya iniciado sesión correctamente
+                        Toast.makeText(context, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
+
     }
 
     @Override
@@ -86,7 +111,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
             btnComprar = itemView.findViewById(R.id.btnComprar);
-            // Incluye aquí otras vistas de los elementos del producto
+            // Incluye aquí otras vistas de los elementos del producto si es necesario
         }
     }
 }

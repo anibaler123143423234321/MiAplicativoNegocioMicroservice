@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 
 import com.bumptech.glide.Glide;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
@@ -44,17 +46,16 @@ public class ComprarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comprar);
 
-        txtUserId = findViewById(R.id.txtUserId);
-        txtProductoId = findViewById(R.id.txtProductoId);
-        txtNombreProducto = findViewById(R.id.txtNombreProducto);
-        txtPrecioProducto = findViewById(R.id.txtPrecioProducto);
-        imgProducto = findViewById(R.id.imgProducto);
-        edtCantidadDeseada = findViewById(R.id.edtCantidadDeseada);
-        btnConfirmarCompra = findViewById(R.id.btnConfirmarCompra);
+        // Inicializa las vistas
+        initView();
 
-        apiServiceCompras = ConfigApi.getInstanceCompra(this);
+        // Configura la Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Habilita el botón de retroceso en la barra de herramientas
+        getSupportActionBar().setTitle(""); // Establece el título en blanco para que no se muestre en la barra de herramientas
 
-        // Obtén los extras enviados desde EntradaActivity
+        // Obtiene los extras enviados desde EntradaActivity
         Intent intent = getIntent();
         if (intent != null) {
             userId = intent.getLongExtra("userId", -1);
@@ -72,6 +73,17 @@ public class ComprarActivity extends AppCompatActivity {
                 confirmarCompra();
             }
         });
+    }
+
+    private void initView() {
+        txtUserId = findViewById(R.id.txtUserId);
+        txtProductoId = findViewById(R.id.txtProductoId);
+        txtNombreProducto = findViewById(R.id.txtNombreProducto);
+        txtPrecioProducto = findViewById(R.id.txtPrecioProducto);
+        imgProducto = findViewById(R.id.imgProducto);
+        edtCantidadDeseada = findViewById(R.id.edtCantidadDeseada);
+        btnConfirmarCompra = findViewById(R.id.btnConfirmarCompra);
+        apiServiceCompras = ConfigApi.getInstanceCompra(this);
     }
 
     private void mostrarDetallesDelProducto(Long userId, Long productoId, String nombreProducto, double precioProducto, String imagenProducto) {
@@ -126,5 +138,12 @@ public class ComprarActivity extends AppCompatActivity {
 
     private void mostrarMensajeCompraExitosa() {
         Toast.makeText(this, "Compra realizada con éxito", Toast.LENGTH_SHORT).show();
+    }
+
+    // Manejar la acción de retroceso de la barra de herramientas
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -4,11 +4,19 @@ public class Producto {
 
     private Long id;
     private String nombre;
-    private String direccion;
+    private String categoria;
     private String picture;
     private Double precio;
     private String fechaCreacion;
     private Long negocioId;
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
     public String getFechaCreacion() {
         return fechaCreacion;
@@ -18,10 +26,10 @@ public class Producto {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Producto(Long id, String nombre, String direccion, String picture, Double precio, String fechaCreacion, Long negocioId) {
+    public Producto(Long id, String nombre, String categoria, String picture, Double precio, String fechaCreacion, Long negocioId) {
         this.id = id;
         this.nombre = nombre;
-        this.direccion = direccion;
+        this.categoria = categoria;
         this.picture = picture;
         this.precio = precio;
         this.fechaCreacion = fechaCreacion;
@@ -46,13 +54,7 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
 
     public String getPicture() {
         return picture;

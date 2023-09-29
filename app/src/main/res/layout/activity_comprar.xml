@@ -1,10 +1,31 @@
-<!-- activity_comprar.xml -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
+
+    <!-- Añade una Toolbar sin título -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:layout_alignParentTop="true"
+        android:title="" />
+
+    <!-- Añade un botón de retroceso con descripción -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Volver atrás"
+        android:src="@drawable/ic_volver_atras"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/toolbar" />
 
     <!-- TextView para mostrar el ID del producto -->
     <TextView
@@ -14,7 +35,8 @@
         android:text="ID del Producto: "
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@id/toolbar"
+        android:layout_centerHorizontal="true" />
 
     <!-- TextView para mostrar el ID del usuario -->
     <TextView
@@ -26,7 +48,7 @@
         android:textStyle="bold"
         android:layout_below="@id/txtProductoId"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 
     <!-- TextView para mostrar el nombre del producto -->
     <TextView
@@ -38,7 +60,7 @@
         android:textStyle="bold"
         android:layout_below="@id/txtUserId"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" /> <!-- Alinea debajo de la Toolbar -->
 
     <!-- TextView para mostrar el precio del producto -->
     <TextView
@@ -49,7 +71,7 @@
         android:textSize="18sp"
         android:layout_below="@id/txtNombreProducto"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" /> <!-- Alinea debajo de la Toolbar -->
 
     <!-- ImageView para mostrar la imagen del producto -->
     <ImageView
@@ -58,9 +80,9 @@
         android:layout_height="200dp"
         android:layout_below="@id/txtPrecioProducto"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" /> <!-- Alinea debajo de la Toolbar -->
 
-    <!-- EditText para ingresar la cantidad deseada -->
+    <!-- EditText para ingresar la cantidad deseada con margen adicional -->
     <EditText
         android:id="@+id/edtCantidadDeseada"
         android:layout_width="match_parent"
@@ -69,7 +91,8 @@
         android:inputType="number"
         android:layout_below="@id/imgProducto"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_margin="8dp"
+    android:layout_centerHorizontal="true" /> <!-- Alinea debajo de la Toolbar -->
 
     <!-- Botón para confirmar la compra -->
     <Button
@@ -80,5 +103,5 @@
         android:textSize="16sp"
         android:layout_below="@id/edtCantidadDeseada"
         android:layout_marginTop="24dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" /> <!-- Alinea debajo de la Toolbar -->
 </RelativeLayout>

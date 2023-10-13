@@ -25,13 +25,33 @@
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/txtCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categoria del Producto"
+        android:textSize="16sp"
+        android:layout_below="@id/txtNombre"
+        android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
+
+    <TextView
         android:id="@+id/txtPrecio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Precio: $0.00"
         android:textSize="16sp"
-        android:layout_below="@id/txtNombre"
+        android:layout_below="@id/txtCategoria"
         android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
+
+
+    <TextView
+        android:id="@+id/txtStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stock: 0"
+        android:textSize="16sp"
+        android:layout_below="@+id/txtPrecio"
+        android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
+
 
     <!-- Agrega otras vistas según tus necesidades -->
 

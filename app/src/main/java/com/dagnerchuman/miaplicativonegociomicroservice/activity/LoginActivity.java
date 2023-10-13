@@ -102,8 +102,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Pasa la información del usuario de LoginActivity  a MainActivity y abre la nueva actividad
                         Intent entradaIntent = new Intent(LoginActivity.this, EntradaActivity.class);
-                      //  entradaIntent.putExtra("userEmail", user.getEmail());
-                       // entradaIntent.putExtra("userName", user.getNombre());
+                        //  entradaIntent.putExtra("userEmail", user.getEmail());
+                        // entradaIntent.putExtra("userName", user.getNombre());
                         // entradaIntent.putExtra("userApellido", user.getApellido());
                         //   entradaIntent.putExtra("userTelefono", user.getTelefono());
                         //  entradaIntent.putExtra("userFechaCreacion", user.getFechaCreacion());
@@ -123,7 +123,11 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putLong("userNegocioId", userNegocioId);
                         editor.apply();
 
+
+                        // Iniciar ambas actividades
                         startActivity(entradaIntent);
+
+
 
                         finish(); // Cierra esta actividad para que el usuario no pueda volver atrás
                     } else {

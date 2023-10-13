@@ -8,6 +8,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConfigApi {
+    // 10.0.2.2
     private static final String BASE_URL = "http://10.0.2.2:5555";
     private static final String SHARED_PREFERENCES_NAME = "UserData";
     private static final String KEY_AUTH_TOKEN = "userToken";

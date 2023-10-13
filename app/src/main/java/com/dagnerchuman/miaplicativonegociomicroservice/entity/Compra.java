@@ -10,6 +10,48 @@ public class Compra {
     private Integer cantidad;
     private String estadoCompra;
 
+
+    private String tipoEnvio;
+    private String tipoDePago;
+    private String codigo;
+
+    private String urlBoleta;
+
+    // Constructor, getters y setters
+
+    public String getUrlBoleta() {
+        return urlBoleta;
+    }
+
+    public void setUrlBoleta(String urlBoleta) {
+        this.urlBoleta = urlBoleta;
+    }
+
+
+    public String getTipoEnvio() {
+        return tipoEnvio;
+    }
+
+    public void setTipoEnvio(String tipoEnvio) {
+        this.tipoEnvio = tipoEnvio;
+    }
+
+    public String getTipoDePago() {
+        return tipoDePago;
+    }
+
+    public void setTipoDePago(String tipoDePago) {
+        this.tipoDePago = tipoDePago;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
     public Long getId() {
         return id;
     }

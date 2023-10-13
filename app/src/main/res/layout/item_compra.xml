@@ -1,0 +1,125 @@
+<!-- res/layout/item_compra.xml -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la Compra del Producto"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tvTituloCompra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Producto"
+            android:textSize="14sp"/>
+
+        <!-- Agrega un título para los TextViews de la compra -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detalles de la Compra"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvFechaCompra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de la Compra"
+            android:textSize="14sp"/>
+
+        <!-- Agrega un título para los TextViews de la compra -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio Total de la Compra"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvPrecioCompra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Precio de la Compra"
+            android:textSize="16sp" />
+
+        <!-- Agrega un título para los TextViews de la compra -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Codigo de la Compra"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvCodigoCompra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Código de Compra"
+            android:textSize="14sp"/>
+
+        <!-- Agrega un título para los TextViews de la compra -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estado de la Compra"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvEstadoCompra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estado de Compra"
+            android:textSize="14sp"/>
+
+        <!-- Agrega un título para los TextViews de la compra -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Envios y Pagos de la Compra"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvTipoEnvio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de Envio de la Compra"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tvTipoDePago"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de Pago de la Compra"
+            android:textSize="14sp"/>
+
+        <!-- Agrega más TextViews para otros atributos de Compra aquí -->
+
+        <!-- ... Otros elementos XML ... -->
+        <Button
+            android:id="@+id/btnDescargarBoleta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descargar Boleta"
+            android:onClick="descargarBoleta" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

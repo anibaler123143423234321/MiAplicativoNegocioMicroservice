@@ -31,6 +31,7 @@
             android:name=".activity.EntradaActivity">
         </activity>
 
+
         <activity
             android:name=".activity.RegisterActivity"
             android:windowSoftInputMode="adjustResize">
@@ -38,8 +39,11 @@
 
 
         <activity
-            android:name=".activity.ComprarActivity"
-            android:label="Comprar Activity">
+            android:name=".activity.ComprarActivity">
+        </activity>
+
+        <activity
+            android:name=".activity.ListadoDeComprasActivity">
         </activity>
 
 

@@ -4,18 +4,28 @@ public class Producto {
 
     private Long id;
     private String nombre;
-    private String categoria;
+    private Long categoriaId;
     private String picture;
     private Double precio;
     private String fechaCreacion;
     private Long negocioId;
 
-    public String getCategoria() {
-        return categoria;
+    private Integer stock;
+
+    public Integer getStock() {
+        return stock;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public String getFechaCreacion() {
@@ -26,10 +36,10 @@ public class Producto {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Producto(Long id, String nombre, String categoria, String picture, Double precio, String fechaCreacion, Long negocioId) {
+    public Producto(Long id, String nombre, Long categoriaId, String picture, Double precio, String fechaCreacion, Long negocioId) {
         this.id = id;
         this.nombre = nombre;
-        this.categoria = categoria;
+        this.categoriaId = categoriaId;
         this.picture = picture;
         this.precio = precio;
         this.fechaCreacion = fechaCreacion;

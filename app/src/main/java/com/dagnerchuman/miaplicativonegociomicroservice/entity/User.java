@@ -14,6 +14,25 @@ public class User {
     private String token;
     private Long negocioId;
 
+    private String dni;
+
+    private String picture;
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 
     public Long getId() {
         return id;

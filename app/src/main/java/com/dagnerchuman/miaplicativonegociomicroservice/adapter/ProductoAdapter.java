@@ -46,18 +46,25 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
         // Configura los datos del producto en las vistas del ViewHolder
         holder.txtNombre.setText(producto.getNombre());
+        holder.txtCategoria.setText(String.valueOf(producto.getCategoriaId()));
         holder.txtPrecio.setText("$" + producto.getPrecio());
+        holder.txtStock.setText(String.valueOf(producto.getStock())); // Corregí esta línea
+        // Verifica si la URL de la imagen del producto es nula o está vacía
+        if (producto.getPicture() == null || producto.getPicture().isEmpty()) {
+            // Carga la imagen por defecto
+            holder.imgProducto.setImageResource(R.drawable.image_not_found);
+        } else {
+            // Carga la imagen desde Firebase Storage utilizando Glide
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Almacenar en caché
+                    .placeholder(R.drawable.ic_documento) // Imagen por defecto
+                    .error(R.drawable.ic_documento); // Imagen por defecto en caso de error
 
-        // Carga la imagen desde Firebase Storage utilizando Glide
-        RequestOptions requestOptions = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL) // Almacenar en caché
-                .placeholder(R.drawable.ic_documento) // Imagen por defecto
-                .error(R.drawable.ic_documento); // Imagen por defecto en caso de error
-
-        Glide.with(context)
-                .load(producto.getPicture()) // URL de la imagen en Firebase Storage
-                .apply(requestOptions)
-                .into(holder.imgProducto);
+            Glide.with(context)
+                    .load(producto.getPicture()) // URL de la imagen en Firebase Storage
+                    .apply(requestOptions)
+                    .into(holder.imgProducto);
+        }
 
         // Configura el clic en el botón Comprar
         holder.btnComprar.setOnClickListener(new View.OnClickListener() {
@@ -68,8 +75,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                     Producto productoSeleccionado = productosList.get(adapterPosition);
                     long productoId = productoSeleccionado.getId();
                     String nombreProducto = productoSeleccionado.getNombre();
+                    long categoriaId = productoSeleccionado.getCategoriaId();
                     double precioProducto = productoSeleccionado.getPrecio();
                     String imagenProducto = productoSeleccionado.getPicture();
+                    int stockProducto = productoSeleccionado.getStock();
 
                     // Obtiene el ID del usuario desde SharedPreferences
                     SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
@@ -81,8 +90,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                         intent.putExtra("userId", userId);
                         intent.putExtra("productoId", productoId);
                         intent.putExtra("nombreProducto", nombreProducto);
+                        intent.putExtra("categoriaProducto", categoriaId);
                         intent.putExtra("precioProducto", precioProducto);
                         intent.putExtra("imagenProducto", imagenProducto);
+                        intent.putExtra("stockProducto", stockProducto);
                         context.startActivity(intent);
                     } else {
                         // El ID del usuario no está disponible en SharedPreferences, maneja esto según tus necesidades
@@ -102,14 +113,16 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
     public class ProductoViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProducto;
-        TextView txtNombre, txtPrecio;
+        TextView txtNombre, txtCategoria, txtPrecio, txtStock;
         Button btnComprar;
 
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProducto = itemView.findViewById(R.id.imgProducto);
             txtNombre = itemView.findViewById(R.id.txtNombre);
+            txtCategoria = itemView.findViewById(R.id.txtCategoria);
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
+            txtStock = itemView.findViewById(R.id.txtStock);
             btnComprar = itemView.findViewById(R.id.btnComprar);
             // Incluye aquí otras vistas de los elementos del producto si es necesario
         }

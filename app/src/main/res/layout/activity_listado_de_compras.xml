@@ -1,55 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.EntradaActivity">
+    tools:context=".activity.ListadoDeComprasActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-
-    <!-- Botón para abrir el menú de navegación -->
-        <ImageButton
-            android:id="@+id/btnNavigation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_setting"
-            android:contentDescription="Abrir menú"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp" />
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Botón para regresar a LoginActivity -->
         <ImageButton
-            android:id="@+id/btnBackToLogin"
+            android:id="@+id/btnBackToEntrada"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_volver_atras"
             android:contentDescription="Regresar a Login"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp" />
+            android:padding="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <!-- Resto de elementos de la Toolbar, como el título -->
     </androidx.appcompat.widget.Toolbar>
 
-
-    <!-- RecyclerView de productos con restricciones -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewProductos"
+        android:id="@+id/recyclerViewCompras"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="8dp"
+        tools:listitem="@layout/item_compra" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

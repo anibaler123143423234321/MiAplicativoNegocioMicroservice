@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -25,7 +26,7 @@ public interface ApiServiceProductos {
     @GET(baseUser)
     Call<List<Producto>> getAllProductos();
 
-    @GET(baseUser + "{productoId}")
+    @GET(baseUser + "/{productoId}") // Corrección aquí
     Call<Producto> getProductoById(@Path("productoId") Long productoId);
 
     @DELETE(baseUser + "/eliminar-todos")
@@ -34,4 +35,8 @@ public interface ApiServiceProductos {
     // Nuevo endpoint para obtener productos siguientes
     @GET(baseUser + "/siguientes")
     Call<List<Producto>> getSiguientesProductos(@Query("posicion") int posicion, @Query("cantidad") int cantidad);
+
+    @PUT(baseUser + "/{productoId}")
+    Call<Producto> actualizarProducto(@Path("productoId") Long productoId, @Body Producto nuevoProducto);
+
 }

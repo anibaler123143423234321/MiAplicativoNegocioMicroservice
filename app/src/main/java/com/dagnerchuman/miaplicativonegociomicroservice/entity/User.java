@@ -16,7 +16,45 @@ public class User {
 
     private String dni;
 
-    private String picture;
+    private String departamento;
+
+    private String provincia;
+
+    private String tipoDoc;
+
+    private String distrito;
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public String getTipoDoc() {
+        return tipoDoc;
+    }
+
+    public void setTipoDoc(String tipoDoc) {
+        this.tipoDoc = tipoDoc;
+    }
+
+    public String getDistrito() {
+        return distrito;
+    }
+
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
+    }
 
     public String getDni() {
         return dni;
@@ -26,13 +64,6 @@ public class User {
         this.dni = dni;
     }
 
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
 
     public Long getId() {
         return id;

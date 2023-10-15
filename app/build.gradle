@@ -55,4 +55,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:20.0.0' // Reemplaza con la versión actual de Firebase Storage
 
 
+    implementation 'com.itextpdf:itext7-core:7.1.14' //boleta
+
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'  // Utiliza la versión más reciente
+
 }

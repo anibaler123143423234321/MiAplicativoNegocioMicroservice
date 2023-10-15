@@ -27,6 +27,6 @@ public interface ApiServiceCompras {
     @PUT(baseCompra + "/{compraId}")
     Call<Compra> updateCompra(@Path("compraId") Long compraId, @Body Compra compra);
 
-    @GET(baseCompra + "/all") // Nuevo punto final para obtener todas las compras
-    Call<List<Compra>> getAllCompras();
+    @GET(baseCompra + "/all")
+    Call<List<Compra>> getAllCompras(@Header("Authorization") String token);
 }

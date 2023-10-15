@@ -14,9 +14,15 @@ import java.util.List;
 
 public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraViewHolder> {
 
-    private List<Compra> comprasList;
+    public interface BoletaDownloadListener {
+        void onBoletaDownload(Compra compra);
+    }
 
-    public CompraAdapter() {
+    private List<Compra> comprasList;
+    private BoletaDownloadListener boletaDownloadListener;
+
+    public CompraAdapter(BoletaDownloadListener listener) {
+        this.boletaDownloadListener = listener;
         this.comprasList = new ArrayList<>();
     }
 
@@ -38,9 +44,20 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
         holder.tvEstadoCompra.setText(compra.getEstadoCompra());
         holder.tvTipoEnvio.setText(compra.getTipoEnvio());
         holder.tvTipoDePago.setText(compra.getTipoDePago());
-        // Agrega más configuraciones para otros atributos de Compra aquí
-    }
+        holder.btnDescargarBoleta.setTag(compra);
 
+        // Agrega más configuraciones para otros atributos de Compra aquí
+
+        // Configura el OnClickListener para el botón de descarga
+        holder.btnDescargarBoleta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (boletaDownloadListener != null) {
+                    boletaDownloadListener.onBoletaDownload(compra);
+                }
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
@@ -62,9 +79,7 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
         TextView tvEstadoCompra;
         TextView tvTipoEnvio;
         TextView tvTipoDePago;
-
         Button btnDescargarBoleta; // Agregar el botón
-
 
         CompraViewHolder(View itemView) {
             super(itemView);
@@ -76,7 +91,6 @@ public class CompraAdapter extends RecyclerView.Adapter<CompraAdapter.CompraView
             tvTipoEnvio = itemView.findViewById(R.id.tvTipoEnvio);
             tvTipoDePago = itemView.findViewById(R.id.tvTipoDePago);
             btnDescargarBoleta = itemView.findViewById(R.id.btnDescargarBoleta); // Inicializa el botón
-
         }
     }
 }

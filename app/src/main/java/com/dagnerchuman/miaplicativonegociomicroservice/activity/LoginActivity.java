@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +23,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout textInputLayoutEmail;
-    private TextInputEditText editTextEmail;
     private TextInputLayout textInputLayoutPassword;
+    private TextInputEditText editTextEmail;
     private TextInputEditText editTextPassword;
     private Button buttonSignIn;
 
@@ -54,101 +53,96 @@ public class LoginActivity extends AppCompatActivity {
 
         // Configura el evento click para el botón "Iniciar Sesión"
         buttonSignIn.setOnClickListener(view -> {
-            // Obtiene los valores de los campos de entrada
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
 
-            // Realiza la solicitud de inicio de sesión
-            performSignIn(email, password);
+            if (validateInput(email, password)) {
+                performSignIn(email, password);
+            }
         });
     }
 
-    // Método para realizar la solicitud de inicio de sesión
+    private boolean validateInput(String email, String password) {
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private void performSignIn(String email, String password) {
-        // Obtén la instancia de ApiService de ConfigApi
         ApiService apiService = ConfigApi.getInstance(this);
 
-        // Crea un objeto Usuario para la solicitud
-        User usuario = new User();
-        usuario.setEmail(email);
-        usuario.setPassword(password);
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
 
-        // Realiza la solicitud de inicio de sesión
-        Call<User> call = apiService.signIn(usuario);
-
-        Log.d("MiApp", "Antes de la solicitud de inicio de sesión");
+        Call<User> call = apiService.signIn(user);
 
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
-                    // La autenticación fue exitosa
-                    Log.d("MiApp", "Inicio de sesión exitoso");
-                    User user = response.body();
-
-                    if (user != null) {
-                        // Guarda el token en tu entidad User local
-                        String token = user.getToken();
-                        String userEmail = user.getEmail();
-                        String userName = user.getNombre();
-                        String userApellido = user.getApellido();
-                        String userTelefono = user.getTelefono();
-                        Long userId = user.getId();
-                        Long userNegocioId = user.getNegocioId();
-
-
-                        // Aquí puedes realizar las acciones necesarias después del inicio de sesión exitoso
-                        Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-
-                        // Pasa la información del usuario de LoginActivity  a MainActivity y abre la nueva actividad
-                        Intent entradaIntent = new Intent(LoginActivity.this, EntradaActivity.class);
-                        //  entradaIntent.putExtra("userEmail", user.getEmail());
-                        // entradaIntent.putExtra("userName", user.getNombre());
-                        // entradaIntent.putExtra("userApellido", user.getApellido());
-                        //   entradaIntent.putExtra("userTelefono", user.getTelefono());
-                        //  entradaIntent.putExtra("userFechaCreacion", user.getFechaCreacion());
-                        //   entradaIntent.putExtra("userId", user.getId());
-                        //  entradaIntent.putExtra("userNegocioId", user.getNegocioId());
-
-                        // Guarda los datos del usuario en SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                        editor.putString("userToken", token);
-                        editor.putString("userEmail", userEmail);
-                        editor.putString("userName", userName);
-                        editor.putString("userApellido", userApellido);
-                        editor.putString("userTelefono", userTelefono);
-                        editor.putLong("userId", userId);
-                        editor.putLong("userNegocioId", userNegocioId);
-                        editor.apply();
-
-
-                        // Iniciar ambas actividades
-                        startActivity(entradaIntent);
-
-
-
-                        finish(); // Cierra esta actividad para que el usuario no pueda volver atrás
-                    } else {
-                        // Maneja el caso en que el usuario sea nulo
-                    }
+                    handleSuccessfulLogin(response.body());
                 } else {
-                    // La autenticación falló
-                    Log.d("MiApp", "Inicio de sesión fallido");
-                    Toast.makeText(LoginActivity.this, "Inicio de sesión fallido", Toast.LENGTH_SHORT).show();
+                    handleLoginFailure();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                // Maneja el error de la solicitud de red aquí
-                Log.e("MiApp", "Error en la solicitud: " + t.getMessage());
-                Toast.makeText(LoginActivity.this, "Error en la solicitud: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                handleNetworkError(t);
             }
         });
+    }
 
-        Log.d("MiApp", "Después de la solicitud de inicio de sesión");
+    private void handleSuccessfulLogin(User user) {
+        if (user != null) {
+            String token = user.getToken();
+            // Guarda los datos del usuario en SharedPreferences
+            saveUserData(user);
+
+            // Muestra un mensaje y navega a la siguiente actividad
+            showToastAndNavigate("Inicio de sesión exitoso", EntradaActivity.class);
+        }
+    }
+
+    private void handleLoginFailure() {
+        Log.d("MiApp", "Inicio de sesión fallido");
+        showToast("Inicio de sesión fallido");
+    }
+
+    private void handleNetworkError(Throwable t) {
+        Log.e("MiApp", "Error en la solicitud: " + t.getMessage());
+        showToast("Error en la solicitud: " + t.getMessage());
+    }
+
+    private void showToast(String message) {
+        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+    }
+
+    private void showToastAndNavigate(String message, Class<?> targetActivity) {
+        showToast(message);
+        Intent intent = new Intent(LoginActivity.this, targetActivity);
+        startActivity(intent);
+        finish();
+    }
+
+    private void saveUserData(User user) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Guarda todos los atributos del usuario
+        editor.putString("userToken", user.getToken());
+        editor.putString("userEmail", user.getEmail());
+        editor.putString("userName", user.getNombre());
+        editor.putString("userApellido", user.getApellido());
+        editor.putString("userTelefono", user.getTelefono());
+        editor.putLong("userId", user.getId());
+        editor.putLong("userNegocioId", user.getNegocioId());
+        // Agrega más atributos según las propiedades de la clase User
+
+        editor.apply();
     }
 
 
@@ -158,18 +152,15 @@ public class LoginActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_INTERNET_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso otorgado, realiza la solicitud de inicio de sesión
                 performSignIn(editTextEmail.getText().toString(), editTextPassword.getText().toString());
             } else {
-                // Permiso denegado, maneja esto según tus necesidades
-                Toast.makeText(this, "Permiso de Internet denegado", Toast.LENGTH_SHORT).show();
+                showToast("Permiso de Internet denegado");
             }
         }
     }
+
     public void onClickSignUp(View view) {
-        // Crea un Intent para iniciar RegisterActivity
         Intent registerIntent = new Intent(this, RegisterActivity.class);
         startActivity(registerIntent);
     }
-
 }

@@ -19,18 +19,28 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
 import com.dagnerchuman.miaplicativonegociomicroservice.activity.ComprarActivity;
+import com.dagnerchuman.miaplicativonegociomicroservice.activity.EntradaActivity;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
-
     private Context context;
-    private List<Producto> productosList;
+    private List<Producto> productList;
+    private List<Producto> filteredList;
+    private List<Producto> carrito;  // Lista de productos en el carrito
+    private EntradaActivity entradaActivity; // Añade esta variable
 
-    public ProductoAdapter(Context context, List<Producto> productosList) {
+
+
+    public ProductoAdapter(Context context, List<Producto> productList) {
         this.context = context;
-        this.productosList = productosList;
+        this.productList = productList;
+        this.filteredList = new ArrayList<>(productList);
+        this.carrito = new ArrayList<>();
+        this.entradaActivity = entradaActivity; // Inicializa la referencia al EntradaActivity
+
     }
 
     @NonNull
@@ -42,65 +52,35 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
     @Override
     public void onBindViewHolder(@NonNull ProductoViewHolder holder, int position) {
-        Producto producto = productosList.get(position);
+        Producto producto = filteredList.get(position); // Cambiar productList a filteredList
 
-        // Configura los datos del producto en las vistas del ViewHolder
         holder.txtNombre.setText(producto.getNombre());
         holder.txtCategoria.setText(String.valueOf(producto.getCategoriaId()));
         holder.txtPrecio.setText("$" + producto.getPrecio());
-        holder.txtStock.setText(String.valueOf(producto.getStock())); // Corregí esta línea
-        // Verifica si la URL de la imagen del producto es nula o está vacía
-        if (producto.getPicture() == null || producto.getPicture().isEmpty()) {
-            // Carga la imagen por defecto
-            holder.imgProducto.setImageResource(R.drawable.image_not_found);
-        } else {
-            // Carga la imagen desde Firebase Storage utilizando Glide
-            RequestOptions requestOptions = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Almacenar en caché
-                    .placeholder(R.drawable.ic_documento) // Imagen por defecto
-                    .error(R.drawable.ic_documento); // Imagen por defecto en caso de error
+        holder.txtStock.setText(String.valueOf(producto.getStock()));
 
-            Glide.with(context)
-                    .load(producto.getPicture()) // URL de la imagen en Firebase Storage
-                    .apply(requestOptions)
-                    .into(holder.imgProducto);
-        }
 
-        // Configura el clic en el botón Comprar
+        RequestOptions requestOptions = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.ic_documento)
+                .error(R.drawable.ic_documento);
+
+        Glide.with(context)
+                .load(producto.getPicture())
+                .apply(requestOptions)
+                .into(holder.imgProducto);
+
         holder.btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int adapterPosition = holder.getAdapterPosition();
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    Producto productoSeleccionado = productosList.get(adapterPosition);
-                    long productoId = productoSeleccionado.getId();
-                    String nombreProducto = productoSeleccionado.getNombre();
-                    long categoriaId = productoSeleccionado.getCategoriaId();
-                    double precioProducto = productoSeleccionado.getPrecio();
-                    String imagenProducto = productoSeleccionado.getPicture();
-                    int stockProducto = productoSeleccionado.getStock();
+                handleCompra(producto);
+            }
+        });
 
-                    // Obtiene el ID del usuario desde SharedPreferences
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
-                    long userId = sharedPreferences.getLong("userId", -1);
-
-                    if (userId != -1) {
-                        // Crea un Intent para iniciar ComprarActivity y pasa los datos del producto y el userId como extras
-                        Intent intent = new Intent(context, ComprarActivity.class);
-                        intent.putExtra("userId", userId);
-                        intent.putExtra("productoId", productoId);
-                        intent.putExtra("nombreProducto", nombreProducto);
-                        intent.putExtra("categoriaProducto", categoriaId);
-                        intent.putExtra("precioProducto", precioProducto);
-                        intent.putExtra("imagenProducto", imagenProducto);
-                        intent.putExtra("stockProducto", stockProducto);
-                        context.startActivity(intent);
-                    } else {
-                        // El ID del usuario no está disponible en SharedPreferences, maneja esto según tus necesidades
-                        // Puede ser que el usuario no haya iniciado sesión correctamente
-                        Toast.makeText(context, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
-                    }
-                }
+        holder.btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProductToCart(producto);
             }
         });
 
@@ -108,13 +88,34 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
     @Override
     public int getItemCount() {
-        return productosList.size();
+        return filteredList.size(); // Cambiar a filteredList
     }
+
+    public void filterProductos(String query) {
+        query = query.toLowerCase();
+        filteredList.clear();
+
+        if (query.isEmpty()) {
+            filteredList.addAll(productList); // Restablecer la lista completa cuando la consulta está vacía
+        } else {
+            for (Producto producto : productList) {
+                String nombre = producto.getNombre().toLowerCase();
+                if (nombre.contains(query)) {
+                    filteredList.add(producto);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+
 
     public class ProductoViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProducto;
         TextView txtNombre, txtCategoria, txtPrecio, txtStock;
-        Button btnComprar;
+        Button btnComprar, btnAddToCart;
+
 
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,7 +125,40 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
             txtStock = itemView.findViewById(R.id.txtStock);
             btnComprar = itemView.findViewById(R.id.btnComprar);
-            // Incluye aquí otras vistas de los elementos del producto si es necesario
+            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }
     }
+
+    private void handleCompra(Producto producto) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        long userId = sharedPreferences.getLong("userId", -1);
+
+        if (userId != -1) {
+            Intent intent = new Intent(context, ComprarActivity.class);
+            intent.putExtra("userId", userId);
+            intent.putExtra("productoId", producto.getId());
+            intent.putExtra("nombreProducto", producto.getNombre());
+            intent.putExtra("categoriaProducto", producto.getCategoriaId());
+            intent.putExtra("precioProducto", producto.getPrecio());
+            intent.putExtra("imagenProducto", producto.getPicture());
+            intent.putExtra("stockProducto", producto.getStock());
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addProductToCart(Producto producto) {
+        // Comprobar si el producto ya está en el carrito
+        if (entradaActivity.addToCart(producto)) {
+            Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Este producto ya está en el carrito", Toast.LENGTH_SHORT).show();
+        }
+
+        // Actualizar el ícono del carrito en la actividad de EntradaActivity
+        entradaActivity.updateCarritoIcon(productList.size()); // Usar el tamaño actual del carrito
+    }
+
+
 }

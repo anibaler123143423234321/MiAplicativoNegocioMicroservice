@@ -1,69 +1,109 @@
-<!-- item_producto.xml -->
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"> <!-- Agregamos margen a todos los lados -->
-
-    <!-- Agregar una ImageView para mostrar la imagen del producto -->
-
+    android:padding="8dp">
+    <!-- Imagen del Producto -->
     <ImageView
         android:id="@+id/imgProducto"
         android:layout_width="85dp"
         android:layout_height="75dp"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:contentDescription="Imagen del producto"
-        android:src="@drawable/ic_documento" />
-
+        android:src="@drawable/ic_documento"/>
+    <!-- Título: Nombre del Producto -->
     <TextView
-        android:id="@+id/txtNombre"
+        android:id="@+id/txtTituloNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nombre del Producto"
         android:textSize="18sp"
         android:textStyle="bold"/>
-
+    <!-- Nombre del Producto -->
+    <TextView
+        android:id="@+id/txtNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre del producto dinámico"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+    <!-- Título: Categoría del Producto -->
+    <TextView
+        android:id="@+id/txtTituloCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categoría del Producto"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    <!-- Categoría del Producto -->
     <TextView
         android:id="@+id/txtCategoria"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Categoria del Producto"
+        android:text="Categoría del producto dinámico"
         android:textSize="16sp"
-        android:layout_below="@id/txtNombre"
-        android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
-
+        android:layout_marginTop="4dp"/>
+    <!-- Título: Precio del Producto -->
+    <TextView
+        android:id="@+id/txtTituloPrecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio del Producto"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    <!-- Precio del Producto -->
     <TextView
         android:id="@+id/txtPrecio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio: $0.00"
+        android:text="Precio del producto dinámico"
         android:textSize="16sp"
-        android:layout_below="@id/txtCategoria"
-        android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
-
-
+        android:layout_marginTop="4dp"/>
+    <!-- Título: Stock del Producto -->
+    <TextView
+        android:id="@+id/txtTituloStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stock del Producto"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    <!-- Stock del Producto -->
     <TextView
         android:id="@+id/txtStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stock: 0"
+        android:text="Stock del producto dinámico"
         android:textSize="16sp"
-        android:layout_below="@+id/txtPrecio"
-        android:layout_marginTop="8dp"/> <!-- Agregamos margen superior -->
-
-
-    <!-- Agrega otras vistas según tus necesidades -->
-
-    <!-- Botón Comprar -->
-    <Button
-        android:id="@+id/btnComprar"
-        android:layout_width="60dp"
-        android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="33dp"
-        android:background="@drawable/ic_add_item"
-        android:text="Comprar"
-         android:layout_marginTop="12dp"/>
-
-</RelativeLayout>
+        android:layout_marginTop="4dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#C0C0C0" />
+    <!-- Botones en un LinearLayout horizontal -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnComprar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_add_shop"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+        <Button
+            android:id="@+id/btnAddToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_add_item"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#C0C0C0" />
+</LinearLayout>

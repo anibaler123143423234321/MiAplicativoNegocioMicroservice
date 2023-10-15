@@ -1,6 +1,9 @@
 package com.dagnerchuman.miaplicativonegociomicroservice.entity;
 
-public class Producto {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Producto implements Serializable {
 
     private Long id;
     private String nombre;
@@ -9,32 +12,7 @@ public class Producto {
     private Double precio;
     private String fechaCreacion;
     private Long negocioId;
-
     private Integer stock;
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public Long getCategoriaId() {
-        return categoriaId;
-    }
-
-    public void setCategoriaId(Long categoriaId) {
-        this.categoriaId = categoriaId;
-    }
-
-    public String getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(String fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
 
     public Producto(Long id, String nombre, Long categoriaId, String picture, Double precio, String fechaCreacion, Long negocioId) {
         this.id = id;
@@ -45,8 +23,6 @@ public class Producto {
         this.fechaCreacion = fechaCreacion;
         this.negocioId = negocioId;
     }
-
-    // Getters y setters para cada atributo
 
     public Long getId() {
         return id;
@@ -64,7 +40,13 @@ public class Producto {
         this.nombre = nombre;
     }
 
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
 
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
 
     public String getPicture() {
         return picture;
@@ -82,7 +64,13 @@ public class Producto {
         this.precio = precio;
     }
 
+    public String getFechaCreacion() {
+        return fechaCreacion;
+    }
 
+    public void setFechaCreacion(String fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
 
     public Long getNegocioId() {
         return negocioId;
@@ -90,5 +78,40 @@ public class Producto {
 
     public void setNegocioId(Long negocioId) {
         this.negocioId = negocioId;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(id, producto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", categoriaId=" + categoriaId +
+                ", picture='" + picture + '\'' +
+                ", precio=" + precio +
+                ", fechaCreacion='" + fechaCreacion + '\'' +
+                ", negocioId=" + negocioId +
+                ", stock=" + stock +
+                '}';
     }
 }

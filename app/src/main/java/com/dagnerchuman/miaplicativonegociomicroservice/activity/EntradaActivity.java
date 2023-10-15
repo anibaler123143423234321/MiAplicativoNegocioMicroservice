@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,17 +31,53 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.dagnerchuman.miaplicativonegociomicroservice.R;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
+import com.dagnerchuman.miaplicativonegociomicroservice.adapter.ProductoAdapter;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceProductos;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EntradaActivity extends AppCompatActivity {
 
     private ImageButton btnBackToLogin;
     private ImageButton btnNavigation;
 
     private RecyclerView recyclerViewProductos;
+    private SearchView searchView;
 
     private ProductoAdapter adapter;
     private List<Producto> productosList;
 
     private AlertDialog popupDialog;
+    private List<Producto> carrito = new ArrayList<>(); // Lista de productos en el carrito
+
+    private int productosEnCarrito = 0; // Variable para llevar un registro de la cantidad de productos en el carrito
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +87,11 @@ public class EntradaActivity extends AppCompatActivity {
         btnBackToLogin = findViewById(R.id.btnBackToLogin);
         recyclerViewProductos = findViewById(R.id.recyclerViewProductos);
         btnNavigation = findViewById(R.id.btnNavigation);
+        searchView = findViewById(R.id.searchView);
 
         recyclerViewProductos.setLayoutManager(new LinearLayoutManager(this));
         productosList = new ArrayList<>();
-        adapter = new ProductoAdapter(this, productosList);
+        adapter = new ProductoAdapter(this, productosList); // Pasar "this" como el tercer argumento
         recyclerViewProductos.setAdapter(adapter);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
@@ -70,10 +109,30 @@ public class EntradaActivity extends AppCompatActivity {
 
         btnBackToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) { // Corregir "toonClick" a "onClick"
                 Intent loginIntent = new Intent(EntradaActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
                 finish();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    // El texto de búsqueda está vacío, oculta el RecyclerView
+                    recyclerViewProductos.setVisibility(View.GONE);
+                } else {
+                    // El texto de búsqueda no está vacío, muestra el RecyclerView
+                    recyclerViewProductos.setVisibility(View.VISIBLE);
+                    adapter.filterProductos(newText);
+                }
+                return true;
             }
         });
 
@@ -171,7 +230,6 @@ public class EntradaActivity extends AppCompatActivity {
         startActivity(mainIntentN);
     }
 
-
     // Método para obtener el nombre del negocio
     private void obtenerNombreNegocio(Long userNegocioId) {
         ApiServiceNegocio apiServiceNegocio = ConfigApi.getInstanceNegocio(this);
@@ -205,6 +263,66 @@ public class EntradaActivity extends AppCompatActivity {
                 Log.e("API Failure", "Fallo en la solicitud a la API", t);
             }
         });
+    }
 
+    public void updateCarritoIcon(int carritoSize) {
+        productosEnCarrito = carritoSize;
+
+        // Actualizar el ícono del carrito en la barra de herramientas
+        invalidateOptionsMenu();
+    }
+
+    public boolean addToCart(Producto producto) {
+        // Comprobar si el producto ya está en el carrito
+        if (!carrito.contains(producto)) {
+            carrito.add(producto);
+            productosEnCarrito++; // Aumenta la cantidad de productos en el carrito
+            updateCarritoIcon(productosEnCarrito);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_entrada, menu);
+        MenuItem carritoItem = menu.findItem(R.id.menu_cart);
+        if (productosEnCarrito > 0) {
+            carritoItem.setIcon(R.drawable.ic_add_shop);
+        } else {
+            carritoItem.setIcon(R.drawable.ic_add_shop);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_cart) {
+            navigateToCarrito();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void navigateToCarrito() {
+        Intent carritoIntent = new Intent(this, CarritoActivity.class);
+        Gson gson = new Gson();
+        String carritoJson = gson.toJson(carrito);
+        carritoIntent.putExtra("carrito", carritoJson);
+        startActivity(carritoIntent);
+    }
+
+    private void setupToolbar(String negocioName) {
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(negocioName);
+        setSupportActionBar(toolbar);
+    }
+
+    private void showErrorDialog(String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Error");
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("Cerrar", null);
+        alertDialogBuilder.show();
     }
 }

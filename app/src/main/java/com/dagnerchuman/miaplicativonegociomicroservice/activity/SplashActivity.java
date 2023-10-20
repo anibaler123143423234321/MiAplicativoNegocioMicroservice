@@ -6,10 +6,12 @@ import android.os.Handler;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
 
 public class SplashActivity extends AppCompatActivity {
-    private static final int SPLASH_DELAY = 3000; // 3 segundos
+    private static final int SPLASH_DELAY = 2000; // 2 segundos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +23,12 @@ public class SplashActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        VideoView splashVideoView = findViewById(R.id.splashVideoView);
+        LottieAnimationView splashAnimationView = findViewById(R.id.animation_view);
 
-        // Establece la ruta del video y comienza la reproducción
-        try {
-            String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.videoentrada;
-            splashVideoView.setVideoPath(videoPath);
-            splashVideoView.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Manejo de excepción: muestra un mensaje de error o realiza otra acción en caso de error de video.
-        }
+        // Configura la animación y comienza la reproducción
+        splashAnimationView.setAnimation(R.raw.anikihamster);
+        splashAnimationView.setRepeatCount(LottieDrawable.INFINITE); // Repetir la animación
+        splashAnimationView.playAnimation();
 
         new Handler().postDelayed(() -> {
             // Navega a la actividad LoginActivity o la que desees después de la pantalla de carga

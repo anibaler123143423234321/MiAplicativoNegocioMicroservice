@@ -11,10 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
@@ -32,7 +36,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.google.gson.Gson;
 
 
 public class EntradaActivity extends AppCompatActivity implements ProductoAdapter.OnProductSelectedListener {
@@ -51,6 +54,10 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
     private List<Producto> productosSeleccionados = new ArrayList<>();
 
     private int productosEnCarrito = 0; // Variable para llevar un registro de la cantidad de productos en el carrito
+    // Variable para almacenar el nombre del negocio
+    private String nombreNegocio;
+    private View customTitle; // Declarar customTitle como una variable miembro
+    private TextView toolbarTitle; // Declarar la variable para el título
 
 
     @Override
@@ -64,6 +71,17 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         recyclerViewProductos = findViewById(R.id.recyclerView);
         productosList = new ArrayList<>();
 
+
+
+        // Infla el diseño personalizado para el título centrado
+        customTitle = getLayoutInflater().inflate(R.layout.custom_toolbar_title, null);
+
+        // Encuentra el título dentro del diseño personalizado
+        toolbarTitle = customTitle.findViewById(R.id.toolbar_title);
+
+        // Configura el título del negocio (asegúrate de que tengas una función obtenerNombreNegocio definida)
+        obtenerNombreNegocio();
+
         // Inicializa el adaptador para el RecyclerView de búsqueda
         adapter = new ProductoAdapter(this, productosList, this); // Pasa "this" como la referencia a EntradaActivity
         recyclerViewProductos.setAdapter(adapter);
@@ -73,6 +91,9 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
         Long userNegocioId = sharedPreferences.getLong("userNegocioId", -1);
+
+        TextView toolbarTitle = customTitle.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(nombreNegocio);
 
         obtenerProductosDelNegocio(userNegocioId);
 
@@ -112,9 +133,17 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
                 return true;
             }
         });
+        // Ejemplo de cómo configurar una barra de herramientas personalizada
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        obtenerNombreNegocio(userNegocioId);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
 
+            // Establece el diseño personalizado como vista de título en la barra de herramientas
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setCustomView(customTitle);
+        }
     }
 
     // Método para obtener los productos del mismo negocio que el usuario
@@ -205,9 +234,11 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         startActivity(mainIntentN);
     }
 
-    // Método para obtener el nombre del negocio
-    private void obtenerNombreNegocio(Long userNegocioId) {
+    private void obtenerNombreNegocio() {
         ApiServiceNegocio apiServiceNegocio = ConfigApi.getInstanceNegocio(this);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
+        Long userNegocioId = sharedPreferences.getLong("userNegocioId", -1);
 
         Call<Negocio> call = apiServiceNegocio.getNegocioById(userNegocioId);
 
@@ -219,15 +250,19 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
                     if (negocio != null) {
                         // Obtén el nombre del negocio
                         String nombreNegocio = negocio.getNombre();
+                        Log.d("API Response", "Nombre del negocio obtenido: " + nombreNegocio);
 
-                        Log.d("API Response", "Nombre del negocio obtenido: " + nombreNegocio); // Agregar este log
+                        // Configura el nombre del negocio como título centrado en la barra de herramientas
+                        if (getSupportActionBar() != null) {
+                            getSupportActionBar().setDisplayShowTitleEnabled(false);
+                            getSupportActionBar().setDisplayShowCustomEnabled(true);
 
-                        // Obtén la instancia del Toolbar
-                        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-
-                        // Establece el nombre del negocio como título del Toolbar
-                        toolbar.setTitle(nombreNegocio);
-                        setSupportActionBar(toolbar);
+                            // Infla el diseño personalizado para el título centrado
+                            customTitle = getLayoutInflater().inflate(R.layout.custom_toolbar_title, null);
+                            toolbarTitle = customTitle.findViewById(R.id.toolbar_title); // Asigna la referencia a la variable
+                            toolbarTitle.setText(nombreNegocio);
+                            getSupportActionBar().setCustomView(customTitle);
+                        }
                     }
                 }
             }
@@ -239,6 +274,7 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
             }
         });
     }
+
 
     public void updateCarritoIcon(int carritoSize) {
         productosEnCarrito = carritoSize;
@@ -252,16 +288,21 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
             carrito.add(producto);
             productosEnCarrito++; // Aumenta la cantidad de productos en el carrito
             updateCarritoIcon(productosEnCarrito);
+
+            // Agrega un registro de depuración para verificar que se agregó un producto al carrito.
+            Log.d("Carrito", "Producto agregado al carrito: " + producto.getNombre());
+
             return true;
         }
         return false;
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_entrada, menu);
         MenuItem carritoItem = menu.findItem(R.id.menu_cart);
-        carritoItem.setIcon(R.drawable.ic_add_shop); // Actualizar el ícono del carrito
+        carritoItem.setIcon(R.drawable.ic_add_shop);
         return true;
     }
 

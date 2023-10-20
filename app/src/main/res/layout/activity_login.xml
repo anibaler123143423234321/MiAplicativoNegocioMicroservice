@@ -19,6 +19,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/topAnimationView"
+            android:layout_width="264dp"
+            android:layout_height="234dp"
+            app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_lnygeelq" />
+
+
+
+
+
         <!-- Aquí se ha actualizado el TextView de bienvenida -->
         <TextView
             android:layout_width="match_parent"
@@ -66,7 +84,8 @@
             android:id="@+id/buttonSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0077C0"
+            android:layout_marginTop="16dp"
+        android:background="#0077C0"
             android:textColor="#fff"
             android:text="Iniciar Sesión"
             android:drawableEnd="@drawable/ic_login"/>
@@ -76,7 +95,8 @@
             android:id="@+id/buttonSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0077C0"
+            android:layout_marginTop="16dp"
+        android:background="#0077C0"
             android:textColor="#fff"
             android:text="Registrarse"
             android:onClick="onClickSignUp" />

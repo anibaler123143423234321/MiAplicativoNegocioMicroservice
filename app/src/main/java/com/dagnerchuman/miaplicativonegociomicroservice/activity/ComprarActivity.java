@@ -147,40 +147,45 @@ public class ComprarActivity extends AppCompatActivity implements CompraAdapter.
 
         if (!cantidadDeseadaStr.isEmpty()) {
             cantidad = Integer.parseInt(cantidadDeseadaStr);
-            tipoEnvio = obtenerValorRadioSeleccionado(radioGroupEnvio);
-            tipoDePago = obtenerValorRadioSeleccionado(radioGroupPago);
 
-            Compra compra = new Compra();
-            compra.setUserId(userId);
-            compra.setProductoId(productoId);
-            compra.setTitulo(titulo);
-            compra.setPrecioCompra(precioCompra);
-            compra.setCantidad(cantidad);
-            compra.setTipoEnvio(tipoEnvio);
-            compra.setTipoDePago(tipoDePago);
+            if (cantidad <= stockProducto) {
+                tipoEnvio = obtenerValorRadioSeleccionado(radioGroupEnvio);
+                tipoDePago = obtenerValorRadioSeleccionado(radioGroupPago);
 
-            Call<Compra> call = apiServiceCompras.saveCompra(compra);
-            call.enqueue(new Callback<Compra>() {
-                @Override
-                public void onResponse(Call<Compra> call, Response<Compra> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        Compra compraConfirmada = response.body();
-                        Log.i("ComprarActivity", "Compra confirmada con éxito. ID: " + compraConfirmada.getId());
+                Compra compra = new Compra();
+                compra.setUserId(userId);
+                compra.setProductoId(productoId);
+                compra.setTitulo(titulo);
+                compra.setPrecioCompra(precioCompra);
+                compra.setCantidad(cantidad);
+                compra.setTipoEnvio(tipoEnvio);
+                compra.setTipoDePago(tipoDePago);
 
-                        int nuevoStock = stockProducto - cantidad;
-                        actualizarStockProducto(productoId, nuevoStock);
-                    } else {
-                        Toast.makeText(ComprarActivity.this, "No se pudo confirmar la compra", Toast.LENGTH_SHORT).show();
-                        Log.e("ComprarActivity", "Error en la respuesta: " + response.code());
+                Call<Compra> call = apiServiceCompras.saveCompra(compra);
+                call.enqueue(new Callback<Compra>() {
+                    @Override
+                    public void onResponse(Call<Compra> call, Response<Compra> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            Compra compraConfirmada = response.body();
+                            Log.i("ComprarActivity", "Compra confirmada con éxito. ID: " + compraConfirmada.getId());
+
+                            int nuevoStock = stockProducto - cantidad;
+                            actualizarStockProducto(productoId, nuevoStock);
+                        } else {
+                            Toast.makeText(ComprarActivity.this, "No se pudo confirmar la compra", Toast.LENGTH_SHORT).show();
+                            Log.e("ComprarActivity", "Error en la respuesta: " + response.code());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Compra> call, Throwable t) {
-                    Toast.makeText(ComprarActivity.this, "Error en la conexion", Toast.LENGTH_SHORT).show();
-                    Log.e("ComprarActivity", "Error de conexión", t);
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Compra> call, Throwable t) {
+                        Toast.makeText(ComprarActivity.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+                        Log.e("ComprarActivity", "Error de conexión", t);
+                    }
+                });
+            } else {
+                Toast.makeText(this, "La cantidad deseada supera el stock actual (" + stockProducto + ")", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Ingresa la cantidad deseada", Toast.LENGTH_SHORT).show();
         }

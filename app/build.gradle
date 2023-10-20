@@ -59,4 +59,5 @@ dependencies {
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'  // Utiliza la versión más reciente
 
+    implementation 'com.airbnb.android:lottie:3.4.2'
 }

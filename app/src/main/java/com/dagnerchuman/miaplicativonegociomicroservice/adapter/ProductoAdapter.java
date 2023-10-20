@@ -3,6 +3,7 @@ package com.dagnerchuman.miaplicativonegociomicroservice.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,25 +23,38 @@ import com.dagnerchuman.miaplicativonegociomicroservice.activity.ComprarActivity
 import com.dagnerchuman.miaplicativonegociomicroservice.activity.EntradaActivity;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoViewHolder> {
     private Context context;
+
     private List<Producto> productList;
     private List<Producto> filteredList;
     private List<Producto> carrito;  // Lista de productos en el carrito
     private EntradaActivity entradaActivity; // Añade esta variable
 
+    private OnProductSelectedListener productSelectedListener;
+    private List<Producto> productosSeleccionados = new ArrayList<>(); // Lista de productos seleccionados
 
 
-    public ProductoAdapter(Context context, List<Producto> productList) {
+    public ProductoAdapter(Context context, List<Producto> productList, EntradaActivity entradaActivity) {
         this.context = context;
         this.productList = productList;
         this.filteredList = new ArrayList<>(productList);
         this.carrito = new ArrayList<>();
         this.entradaActivity = entradaActivity; // Inicializa la referencia al EntradaActivity
+    }
 
+    // Establecer el listener de selección de productos
+    public void setOnProductSelectedListener(OnProductSelectedListener listener) {
+        this.productSelectedListener = listener;
+    }
+
+    // Add this method to get the carrito list
+    public List<Producto> getCarrito() {
+        return carrito;
     }
 
     @NonNull
@@ -80,7 +94,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductToCart(producto);
+                addProductToCart(producto); // Agregar el producto al carrito
             }
         });
 
@@ -149,16 +163,29 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     }
 
     private void addProductToCart(Producto producto) {
-        // Comprobar si el producto ya está en el carrito
-        if (entradaActivity.addToCart(producto)) {
+        if (!carrito.contains(producto)) {
+            carrito.add(producto); // Agregar el producto al carrito
+            entradaActivity.addToCart(producto);
             Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
+
+            // Agregar un log para mostrar el listado completo de productos en el carrito
+            Log.d("Carrito de Compras", "Listado de productos en el carrito:");
+            for (Producto p : carrito) {
+                Log.d("Carrito de Compras", "Nombre: " + p.getNombre() + ", ID: " + p.getId());
+            }
         } else {
             Toast.makeText(context, "Este producto ya está en el carrito", Toast.LENGTH_SHORT).show();
         }
 
         // Actualizar el ícono del carrito en la actividad de EntradaActivity
-        entradaActivity.updateCarritoIcon(productList.size()); // Usar el tamaño actual del carrito
+        entradaActivity.updateCarritoIcon(carrito.size()); // Usar el tamaño actual del carrito
     }
 
 
+    public interface OnProductSelectedListener {
+        void onProductSelected(Producto producto);
+    }
+
 }
+
+

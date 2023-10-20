@@ -8,15 +8,18 @@
     tools:context=".activity.EntradaActivity">
 
     <!-- Toolbar -->
+
+    <!-- SearchView -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -25,35 +28,25 @@
             android:id="@+id/btnNavigation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_setting"
-            android:contentDescription="Abrir menú"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp" />
+            android:contentDescription="Abrir menú"
+            android:padding="8dp"
+            android:src="@drawable/ic_setting" />
 
         <!-- Botón para regresar a LoginActivity -->
         <ImageButton
             android:id="@+id/btnBackToLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_volver_atras"
-            android:contentDescription="Regresar a Login"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp" />
+            android:contentDescription="Regresar a Login"
+            android:padding="8dp"
+            android:src="@drawable/ic_volver_atras" />
 
-        <!-- Icono del carrito -->
-        <ImageView
-            android:id="@+id/btnCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_shop"
-        android:contentDescription="Carrito de compras"
-        android:background="?android:attr/selectableItemBackground"
-        android:padding="8dp" />
 
         <!-- Resto de elementos de la Toolbar, como el título -->
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- SearchView -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"
@@ -66,7 +59,7 @@
 
     <!-- RecyclerView de productos con restricciones -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewProductos"
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/searchView"

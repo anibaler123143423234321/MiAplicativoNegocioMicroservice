@@ -14,21 +14,27 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
+import com.dagnerchuman.miaplicativonegociomicroservice.adapter.CompraAdapter;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceCompras;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceProductos;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Compra;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ComprarActivity extends AppCompatActivity {
+public class ComprarActivity extends AppCompatActivity implements CompraAdapter.BoletaDownloadListener {
 
     private TextView txtUserId;
     private TextView txtProductoId;
@@ -51,13 +57,29 @@ public class ComprarActivity extends AppCompatActivity {
     private Integer cantidad;
     private String tipoEnvio;
     private String tipoDePago;
+    private List<Producto> listaCarrito; // Lista de productos en el carrito
+    private CompraAdapter compraAdapter; // Crea un adapter personalizado para las compras
+    // Añade una variable para el RecyclerView y su adaptador
+    private RecyclerView recyclerView;
+    private List<Compra> comprasList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comprar);
 
+        // Inicializa las vistas
         initView();
+
+        // Configura el RecyclerView
+        recyclerView = findViewById(R.id.recyclerViewCompras);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        compraAdapter = new CompraAdapter(this);
+        recyclerView.setAdapter(compraAdapter);
+
+
+        // Configura el adaptador con las compras
+        compraAdapter.setCompras(comprasList);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,13 +87,16 @@ public class ComprarActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         Intent intent = getIntent();
-        if (intent != null) {
-            userId = intent.getLongExtra("userId", -1);
-            productoId = intent.getLongExtra("productoId", -1);
-            String nombreProducto = intent.getStringExtra("nombreProducto");
-            double precioProducto = intent.getDoubleExtra("precioProducto", 0.0);
-            stockProducto = intent.getIntExtra("stockProducto", 0);
-            String imagenProducto = intent.getStringExtra("imagenProducto");
+        List<Producto> productosSeleccionados = (List<Producto>) intent.getSerializableExtra("productosSeleccionados");
+
+        Intent intent2 = getIntent();
+        if (intent2 != null) {
+            userId = intent2.getLongExtra("userId", -1);
+            productoId = intent2.getLongExtra("productoId", -1);
+            String nombreProducto = intent2.getStringExtra("nombreProducto");
+            double precioProducto = intent2.getDoubleExtra("precioProducto", 0.0);
+            stockProducto = intent2.getIntExtra("stockProducto", 0);
+            String imagenProducto = intent2.getStringExtra("imagenProducto");
 
             mostrarDetallesDelProducto(userId, productoId, nombreProducto, precioProducto, stockProducto, imagenProducto);
         }
@@ -152,7 +177,7 @@ public class ComprarActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Compra> call, Throwable t) {
-                    Toast.makeText(ComprarActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ComprarActivity.this, "Error en la conexion", Toast.LENGTH_SHORT).show();
                     Log.e("ComprarActivity", "Error de conexión", t);
                 }
             });
@@ -201,7 +226,7 @@ public class ComprarActivity extends AppCompatActivity {
     }
 
     private void mostrarMensajeCompraExitosa() {
-        Toast.makeText(this, "Compra realizada con éxito", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ComprarActivity.this, "Compra realizada con éxito", Toast.LENGTH_SHORT).show();
         Intent entradaIntent = new Intent(ComprarActivity.this, EntradaActivity.class);
         startActivity(entradaIntent);
         finish();
@@ -218,4 +243,22 @@ public class ComprarActivity extends AppCompatActivity {
         RadioButton radioButton = findViewById(selectedId);
         return radioButton != null ? radioButton.getText().toString() : "";
     }
+
+
+
+    // Implementa el método onBoletaDownload para manejar la descarga de boletas
+    @Override
+    public void onBoletaDownload(Compra compra) {
+        // Aquí puedes implementar la lógica para descargar la boleta de la compra.
+        // Por ejemplo, mostrar un diálogo de descarga o iniciar una actividad de descarga.
+    }
+
+    // Este método simula cargar las compras desde una fuente de datos.
+    private void cargarComprasDesdeFuenteDeDatos() {
+        // Simula cargar una lista de compras desde una fuente de datos.
+        // Debes obtener las compras reales de tu aplicación y agregarlas a la lista.
+
+        // Agrega más compras según tus datos reales.
+    }
+
 }

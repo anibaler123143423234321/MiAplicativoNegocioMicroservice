@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -24,6 +26,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_below="@id/toolbar" />
+
+    <!-- Agrega un RecyclerView para mostrar la lista de compras -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCompras"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"/>
 
     <TextView
         android:id="@+id/txtProductoId"

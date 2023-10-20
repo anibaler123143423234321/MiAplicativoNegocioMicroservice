@@ -94,6 +94,7 @@
             android:background="@drawable/ic_add_shop"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
+
         <Button
             android:id="@+id/btnAddToCart"
             android:layout_width="wrap_content"

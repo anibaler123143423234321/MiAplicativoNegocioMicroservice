@@ -24,6 +24,7 @@ import com.dagnerchuman.miaplicativonegociomicroservice.adapter.ProductoAdapter;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceProductos;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,39 +32,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.dagnerchuman.miaplicativonegociomicroservice.R;
-import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
-import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
-import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
-import com.dagnerchuman.miaplicativonegociomicroservice.adapter.ProductoAdapter;
-import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceProductos;
-import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class EntradaActivity extends AppCompatActivity {
+public class EntradaActivity extends AppCompatActivity implements ProductoAdapter.OnProductSelectedListener {
 
     private ImageButton btnBackToLogin;
     private ImageButton btnNavigation;
@@ -76,8 +48,10 @@ public class EntradaActivity extends AppCompatActivity {
 
     private AlertDialog popupDialog;
     private List<Producto> carrito = new ArrayList<>(); // Lista de productos en el carrito
+    private List<Producto> productosSeleccionados = new ArrayList<>();
 
     private int productosEnCarrito = 0; // Variable para llevar un registro de la cantidad de productos en el carrito
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,21 +59,24 @@ public class EntradaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_entrada);
 
         btnBackToLogin = findViewById(R.id.btnBackToLogin);
-        recyclerViewProductos = findViewById(R.id.recyclerViewProductos);
         btnNavigation = findViewById(R.id.btnNavigation);
         searchView = findViewById(R.id.searchView);
-
-        recyclerViewProductos.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewProductos = findViewById(R.id.recyclerView);
         productosList = new ArrayList<>();
-        adapter = new ProductoAdapter(this, productosList); // Pasar "this" como el tercer argumento
+
+        // Inicializa el adaptador para el RecyclerView de búsqueda
+        adapter = new ProductoAdapter(this, productosList, this); // Pasa "this" como la referencia a EntradaActivity
         recyclerViewProductos.setAdapter(adapter);
+
+        // Configura el RecyclerView con el adaptador
+        recyclerViewProductos.setLayoutManager(new LinearLayoutManager(this));
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
         Long userNegocioId = sharedPreferences.getLong("userNegocioId", -1);
 
-        // Llama a la API para obtener los productos del mismo negocio que el usuario
         obtenerProductosDelNegocio(userNegocioId);
 
+        // Configuración del botón de navegación
         btnNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,15 +84,17 @@ public class EntradaActivity extends AppCompatActivity {
             }
         });
 
+        // Configuración del botón de retroceso
         btnBackToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { // Corregir "toonClick" a "onClick"
+            public void onClick(View view) {
                 Intent loginIntent = new Intent(EntradaActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
                 finish();
             }
         });
 
+        // Configuración del SearchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -125,10 +104,8 @@ public class EntradaActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    // El texto de búsqueda está vacío, oculta el RecyclerView
                     recyclerViewProductos.setVisibility(View.GONE);
                 } else {
-                    // El texto de búsqueda no está vacío, muestra el RecyclerView
                     recyclerViewProductos.setVisibility(View.VISIBLE);
                     adapter.filterProductos(newText);
                 }
@@ -136,8 +113,8 @@ public class EntradaActivity extends AppCompatActivity {
             }
         });
 
-        // Obtener el nombre del negocio y establecerlo en el Toolbar
         obtenerNombreNegocio(userNegocioId);
+
     }
 
     // Método para obtener los productos del mismo negocio que el usuario
@@ -161,9 +138,7 @@ public class EntradaActivity extends AppCompatActivity {
                     }
 
                     // Actualiza la lista de productos en el adaptador
-                    productosList.clear();
                     productosList.addAll(productosDelNegocio);
-                    adapter.notifyDataSetChanged();
 
                     Log.d("API Response", "Respuesta exitosa");
                 } else {
@@ -267,10 +242,9 @@ public class EntradaActivity extends AppCompatActivity {
 
     public void updateCarritoIcon(int carritoSize) {
         productosEnCarrito = carritoSize;
-
-        // Actualizar el ícono del carrito en la barra de herramientas
         invalidateOptionsMenu();
     }
+
 
     public boolean addToCart(Producto producto) {
         // Comprobar si el producto ya está en el carrito
@@ -287,42 +261,26 @@ public class EntradaActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_entrada, menu);
         MenuItem carritoItem = menu.findItem(R.id.menu_cart);
-        if (productosEnCarrito > 0) {
-            carritoItem.setIcon(R.drawable.ic_add_shop);
-        } else {
-            carritoItem.setIcon(R.drawable.ic_add_shop);
-        }
+        carritoItem.setIcon(R.drawable.ic_add_shop); // Actualizar el ícono del carrito
         return true;
     }
 
+    // Método para manejar clics en el ícono del carrito (menu_cart)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cart) {
-            navigateToCarrito();
+            Intent intent = new Intent(this, ComprarActivity.class);
+            // Obtener el carrito del adaptador y pasarlo a ComprarActivity
+            intent.putExtra("productosSeleccionados", (Serializable) adapter.getCarrito());
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void navigateToCarrito() {
-        Intent carritoIntent = new Intent(this, CarritoActivity.class);
-        Gson gson = new Gson();
-        String carritoJson = gson.toJson(carrito);
-        carritoIntent.putExtra("carrito", carritoJson);
-        startActivity(carritoIntent);
-    }
-
-    private void setupToolbar(String negocioName) {
-        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(negocioName);
-        setSupportActionBar(toolbar);
-    }
-
-    private void showErrorDialog(String message) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Error");
-        alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setPositiveButton("Cerrar", null);
-        alertDialogBuilder.show();
+    // Implementación del método de la interfaz para recibir productos seleccionados
+    @Override
+    public void onProductSelected(Producto producto) {
+        productosSeleccionados.add(producto);
     }
 }

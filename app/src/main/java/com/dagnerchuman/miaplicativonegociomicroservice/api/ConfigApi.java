@@ -17,6 +17,7 @@ public class ConfigApi {
     private static ApiServiceNegocio apiServiceNegocio;
     private static ApiServiceProductos apiServiceProducto;
     private static ApiServiceCompras apiServiceCompra;
+    private static ApiServiceCategorias apiServiceCategorias;
 
     public static ApiService getInstance(Context context) {
         // Obtain the token from SharedPreferences
@@ -121,4 +122,32 @@ public class ConfigApi {
         }
         return apiServiceCompra;
     }
+
+    public static ApiServiceCategorias getInstanceCategorias(Context context) {
+        // Obtain the token from SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
+
+        if (apiServiceCategorias == null) {
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            httpClient.addInterceptor(chain -> {
+                Request original = chain.request();
+                Request.Builder requestBuilder = original.newBuilder()
+                        .header("Authorization", authToken); // Add your authorization header here
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            });
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(httpClient.build()) // Set the custom OkHttpClient
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            apiServiceCategorias = retrofit.create(ApiServiceCategorias.class);
+        }
+        return apiServiceCategorias;
+    }
+
+
 }

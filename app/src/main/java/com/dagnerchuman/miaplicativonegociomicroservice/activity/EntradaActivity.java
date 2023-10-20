@@ -1,6 +1,7 @@
 package com.dagnerchuman.miaplicativonegociomicroservice.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.ActionBar;
@@ -18,10 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceCategorias;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.Categoria;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Negocio;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
 import com.dagnerchuman.miaplicativonegociomicroservice.adapter.ProductoAdapter;
@@ -55,9 +61,12 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
 
     private int productosEnCarrito = 0; // Variable para llevar un registro de la cantidad de productos en el carrito
     // Variable para almacenar el nombre del negocio
+    private int categoriaCount = 0;
+
     private String nombreNegocio;
     private View customTitle; // Declarar customTitle como una variable miembro
     private TextView toolbarTitle; // Declarar la variable para el título
+    private LinearLayout categoryButtonContainer;
 
 
     @Override
@@ -71,6 +80,8 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         recyclerViewProductos = findViewById(R.id.recyclerView);
         productosList = new ArrayList<>();
 
+        // Encuentra el contenedor de botones de categoría en tu diseño
+        categoryButtonContainer = findViewById(R.id.categoryButtonContainer);
 
 
         // Infla el diseño personalizado para el título centrado
@@ -94,6 +105,12 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
 
         TextView toolbarTitle = customTitle.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(nombreNegocio);
+
+
+        // Realiza una llamada a la API para obtener las categorías
+        Log.d("EntradaActivity", "Obteniendo categorías...");
+        obtenerCategorias(userNegocioId);
+
 
         obtenerProductosDelNegocio(userNegocioId);
 
@@ -323,5 +340,60 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
     @Override
     public void onProductSelected(Producto producto) {
         productosSeleccionados.add(producto);
+    }
+
+    private void obtenerCategorias(Long userNegocioId) {
+        ApiServiceCategorias apiServiceCategorias = ConfigApi.getInstanceCategorias(this);
+        Context context = this; // Si te encuentras en una actividad
+
+        String userToken = ApiServiceCategorias.getUserToken(context); // Obtén el token de usuario desde las preferencias
+        Call<List<Categoria>> call = apiServiceCategorias.getAllCategorias("Bearer " + userToken); // Agrega "Bearer " antes del token
+
+
+        call.enqueue(new Callback<List<Categoria>>() {
+            @Override
+            public void onResponse(Call<List<Categoria>> call, Response<List<Categoria>> response) {
+                if (response.isSuccessful()) {
+                    List<Categoria> categorias = response.body();
+
+                    for (Categoria categoria : categorias) {
+                        Log.d("Categoría", "ID: " + categoria.getId() + ", Nombre: " + categoria.getNombre() + ", NegocioId: " + categoria.getNegocioId());
+                        if (categoria.getNegocioId().equals(userNegocioId)) {
+                            // Incrementa el contador
+                            categoriaCount++;
+
+                            // Crea un nuevo botón para la categoría
+                            Button categoryButton = new Button(EntradaActivity.this);
+                            categoryButton.setText(categoria.getNombre());
+
+                            // Configura el clic del botón para manejar la selección de la categoría
+                            categoryButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Maneja la selección de la categoría aquí
+                                    Log.d("Categoría seleccionada", "ID: " + categoria.getId() + ", Nombre: " + categoria.getNombre());
+                                }
+                            });
+
+                            // Agrega el botón al contenedor de botones de categoría
+                            categoryButtonContainer.addView(categoryButton);
+                        }
+                    }
+
+                    // Agrega un registro para mostrar la cantidad total de categorías
+                    Log.d("Categorías totales", "Cantidad: " + categoriaCount);
+                } else {
+                    Log.e("API Response", "Respuesta no exitosa: " + response.code());
+                    // Agregar un registro para mostrar el estado del servidor en caso de una respuesta no exitosa
+                    Log.e("API Response", "Estado del servidor: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Categoria>> call, Throwable t) {
+                // Maneja el error de la solicitud a la API aquí
+                Log.e("API Failure", "Fallo en la solicitud a la API", t);
+            }
+        });
     }
 }

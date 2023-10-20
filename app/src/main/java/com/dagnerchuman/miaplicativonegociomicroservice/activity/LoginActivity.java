@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
+import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceNegocio;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.User;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiService;
@@ -99,13 +100,22 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSuccessfulLogin(User user) {
         if (user != null) {
             String token = user.getToken();
+
             // Guarda los datos del usuario en SharedPreferences
             saveUserData(user);
+
+            // Configura Retrofit con el token Bearer y obtén una instancia de ApiServiceNegocio
+            ApiServiceNegocio apiServiceNegocio = ConfigApi.getInstanceNegocio(this);
+
+            // Realiza las solicitudes utilizando apiServiceNegocio
+            // Ejemplo de cómo usar apiServiceNegocio:
+            // Call<Negocio> negocioCall = apiServiceNegocio.getNegocioById(123L);
 
             // Muestra un mensaje y navega a la siguiente actividad
             showToastAndNavigate("Inicio de sesión exitoso", EntradaActivity.class);
         }
     }
+
 
     private void handleLoginFailure() {
         Log.d("MiApp", "Inicio de sesión fallido");

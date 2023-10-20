@@ -344,10 +344,8 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
 
     private void obtenerCategorias(Long userNegocioId) {
         ApiServiceCategorias apiServiceCategorias = ConfigApi.getInstanceCategorias(this);
-        Context context = this; // Si te encuentras en una actividad
 
-        String userToken = ApiServiceCategorias.getUserToken(context); // Obtén el token de usuario desde las preferencias
-        Call<List<Categoria>> call = apiServiceCategorias.getAllCategorias("Bearer " + userToken); // Agrega "Bearer " antes del token
+        Call<List<Categoria>> call = apiServiceCategorias.getAllCategorias(); // Agrega "Bearer " antes del token
 
 
         call.enqueue(new Callback<List<Categoria>>() {
@@ -396,4 +394,6 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
             }
         });
     }
+
+
 }

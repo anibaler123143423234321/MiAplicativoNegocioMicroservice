@@ -11,25 +11,25 @@ import retrofit2.Call;
 import retrofit2.http.*;
 
 public interface ApiServiceCategorias {
-    String PREFERENCES_NAME = "UserPreferences";
-    public static String getUserToken(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString("userToken", null); // "userToken" es la clave bajo la cual se almacena el token
-    }
-    String baseUser = "api/categoria";
+    String baseUser = "gateway/categoria";
 
+    @Headers("Authorization: Bearer")
     @POST(baseUser)
     Call<Categoria> saveCategoria(@Body Categoria categoria);
 
+    @Headers("Authorization: Bearer")
     @GET(baseUser)
-    Call<List<Categoria>> getAllCategorias(@Header("Authorization") String token);
+    Call<List<Categoria>> getAllCategorias();
 
+    @Headers("Authorization: Bearer")
     @GET(baseUser+"/{categoriaId}")
     Call<Categoria> getCategoriaById(@Path("categoriaId") Long categoriaId);
 
+    @Headers("Authorization: Bearer")
     @PUT(baseUser + "/{categoriaId}")
     Call<Categoria> updateCategoria(@Path("categoriaId") Long categoriaId, @Body Categoria categoria);
 
+    @Headers("Authorization: Bearer")
     @DELETE(baseUser + "/{categoriaId}")
     Call<Void> deleteCategoria(@Path("categoriaId") Long categoriaId);
 }

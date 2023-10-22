@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConfigApi {
     // 10.0.2.2
-    private static final String BASE_URL = "http://192.168.101.16:5555/";
+    private static final String BASE_URL = "https://dotval-app-982770f3e239.herokuapp.com/";
     private static final String SHARED_PREFERENCES_NAME = "UserData";
     private static final String KEY_AUTH_TOKEN = "userToken";
 

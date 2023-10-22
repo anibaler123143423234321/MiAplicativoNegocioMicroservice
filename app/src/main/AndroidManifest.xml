@@ -42,12 +42,10 @@
         </activity>
 
         <activity
-            android:name=".activity.ListadoDeComprasActivity">
+            android:name=".activity.CategoriaProductosActivity"
+            android:label="Categoría de Productos">
         </activity>
 
-        <activity
-            android:name=".activity.CarritoActivity">
-        </activity>
 
         <!-- Actividad de inicio de sesión (LoginActivity) -->
         <activity

@@ -370,6 +370,10 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
                                 public void onClick(View view) {
                                     // Maneja la selección de la categoría aquí
                                     Log.d("Categoría seleccionada", "ID: " + categoria.getId() + ", Nombre: " + categoria.getNombre());
+                                    // Aquí puedes iniciar la actividad "CategoriaProductosActivity"
+                                    Intent categoriaIntent = new Intent(EntradaActivity.this, CategoriaProductosActivity.class);
+                                    categoriaIntent.putExtra("categoriaSeleccionada", categoria.getId()); // Pasa la categoría seleccionada a la siguiente actividad
+                                    startActivity(categoriaIntent);
                                 }
                             });
 

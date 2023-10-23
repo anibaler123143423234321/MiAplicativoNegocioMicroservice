@@ -67,6 +67,7 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
     private View customTitle; // Declarar customTitle como una variable miembro
     private TextView toolbarTitle; // Declarar la variable para el título
     private LinearLayout categoryButtonContainer;
+    private List<Long> categoriasSeleccionadas = new ArrayList<>();
 
 
     @Override
@@ -370,12 +371,23 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
                                 public void onClick(View view) {
                                     // Maneja la selección de la categoría aquí
                                     Log.d("Categoría seleccionada", "ID: " + categoria.getId() + ", Nombre: " + categoria.getNombre());
-                                    // Aquí puedes iniciar la actividad "CategoriaProductosActivity"
+
+                                    // Agrega el ID de la categoría seleccionada a la lista
+                                    categoriasSeleccionadas.add(categoria.getId());
+
+                                    // Convertir de long[] a Long[]
+                                    Long[] categoriasSeleccionadasArray = new Long[categoriasSeleccionadas.size()];
+                                    for (int i = 0; i < categoriasSeleccionadas.size(); i++) {
+                                        categoriasSeleccionadasArray[i] = categoriasSeleccionadas.get(i);
+                                    }
+
+                                    // Aquí puedes iniciar la actividad "CategoriaProductosActivity" y pasar los IDs de categorías seleccionadas
                                     Intent categoriaIntent = new Intent(EntradaActivity.this, CategoriaProductosActivity.class);
-                                    categoriaIntent.putExtra("categoriaSeleccionada", categoria.getId()); // Pasa la categoría seleccionada a la siguiente actividad
+                                    categoriaIntent.putExtra("categoriaSeleccionada", categoria.getId()); // Pasa el ID de la categoría seleccionada
                                     startActivity(categoriaIntent);
                                 }
                             });
+
 
                             // Agrega el botón al contenedor de botones de categoría
                             categoryButtonContainer.addView(categoryButton);

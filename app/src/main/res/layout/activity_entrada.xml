@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_color"
     tools:context=".activity.EntradaActivity">
 
     <!-- Toolbar -->
@@ -40,6 +41,24 @@
             android:src="@drawable/ic_volver_atras" />
     </androidx.appcompat.widget.Toolbar>
 
+    <!-- TextView para mostrar "Hola nombreUser" -->
+    <TextView
+        android:id="@+id/userText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hola nombreUser"
+        android:textSize="18sp"
+    android:textColor="#000"
+    android:textStyle="bold"
+    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    android:paddingTop="16dp" />
+
+
+
+    <!-- SearchView -->
     <!-- SearchView -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
@@ -47,25 +66,19 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- TextView "Categorías" -->
-    <TextView
-        android:id="@+id/textViewCategorias"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:padding="18dp"
-        android:fontFamily="@font/san_francisco"
-        android:text="Categorías"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/userText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="#fff"
-        android:textSize="24sp" />
+        app:queryHint="Busca tu producto!"
+        android:background="@drawable/background_circular"
+    android:layout_marginTop="16dp"
+    app:iconifiedByDefault="false" />
 
-    <!-- RecyclerView de productos con restricciones -->
+
+
+
+
+
 
     <!-- Vertical RecyclerView para mostrar elementos desplazables verticalmente -->
 
@@ -77,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCategorias"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
         app:layout_constraintVertical_bias="0.038" />
 
     <!-- HorizontalScrollView para botones deslizantes -->
@@ -85,26 +98,44 @@
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCategorias"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        app:layout_constraintVertical_bias="0.081">
 
         <LinearLayout
             android:id="@+id/categoryButtonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="start"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView" >
+            android:gravity="start"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView">
 
 
 
             <!-- Agrega más botones según sea necesario -->
         </LinearLayout>
+
     </HorizontalScrollView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="342dp"
+        android:layout_height="255dp"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+        app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:lottie_autoPlay="true"
+    app:lottie_loop="true"
+    app:lottie_rawRes="@raw/animation_lo29eoea"
+    app:layout_constraintHorizontal_bias="0.5"
+    tools:layout_editor_absoluteX="26dp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -51,7 +51,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
         Producto producto = productList.get(position);
 
         holder.txtNombre.setText(producto.getNombre());
-        holder.txtCategoria.setText(String.valueOf(producto.getCategoriaId()));
+        //holder.txtCategoria.setText(String.valueOf(producto.getCategoriaId()));
         holder.txtPrecio.setText("$" + producto.getPrecio());
         holder.txtStock.setText(String.valueOf(producto.getStock()));
 
@@ -71,13 +71,14 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
                 handleCompra(producto);
             }
         });
-
+/**
         holder.btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addProductToCart(producto);
             }
         });
+   */
     }
 
     @Override
@@ -94,11 +95,11 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
             super(itemView);
             imgProducto = itemView.findViewById(R.id.imgProducto);
             txtNombre = itemView.findViewById(R.id.txtNombre);
-            txtCategoria = itemView.findViewById(R.id.txtCategoria);
+            //txtCategoria = itemView.findViewById(R.id.txtCategoria);
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
             txtStock = itemView.findViewById(R.id.txtStock);
             btnComprar = itemView.findViewById(R.id.btnComprar);
-            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
+            //btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }
     }
 
@@ -121,6 +122,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
         }
     }
 
+    /**
     private void addProductToCart(Producto producto) {
         if (!carrito.contains(producto)) {
             carrito.add(producto);
@@ -135,4 +137,5 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
             Toast.makeText(context, "Este producto ya está en el carrito", Toast.LENGTH_SHORT).show();
         }
     }
+     */
 }

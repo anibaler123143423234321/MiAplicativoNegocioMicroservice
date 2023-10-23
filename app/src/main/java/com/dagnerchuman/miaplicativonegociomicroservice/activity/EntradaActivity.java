@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -81,9 +83,11 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         recyclerViewProductos = findViewById(R.id.recyclerView);
         productosList = new ArrayList<>();
 
+        // Abre el SearchView automáticamente
+        searchView.setIconified(false);
+
         // Encuentra el contenedor de botones de categoría en tu diseño
         categoryButtonContainer = findViewById(R.id.categoryButtonContainer);
-
 
         // Infla el diseño personalizado para el título centrado
         customTitle = getLayoutInflater().inflate(R.layout.custom_toolbar_title, null);
@@ -104,6 +108,7 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
         Long userNegocioId = sharedPreferences.getLong("userNegocioId", -1);
 
+        obtenerProductosDelNegocio(userNegocioId);
         TextView toolbarTitle = customTitle.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(nombreNegocio);
 
@@ -113,7 +118,6 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         obtenerCategorias(userNegocioId);
 
 
-        obtenerProductosDelNegocio(userNegocioId);
 
         // Configuración del botón de navegación
         btnNavigation.setOnClickListener(new View.OnClickListener() {
@@ -142,15 +146,11 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    recyclerViewProductos.setVisibility(View.GONE);
-                } else {
-                    recyclerViewProductos.setVisibility(View.VISIBLE);
-                    adapter.filterProductos(newText);
-                }
+                adapter.filterProductos(newText);
                 return true;
             }
         });
+
         // Ejemplo de cómo configurar una barra de herramientas personalizada
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -162,6 +162,24 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setCustomView(customTitle);
         }
+
+        // Obtén los datos del usuario desde SharedPreferences
+        SharedPreferences sharedPreferences2 = getSharedPreferences("UserDataUser", MODE_PRIVATE);
+
+        String userName = sharedPreferences.getString("userName", "");
+        Log.d("UserData", "User Name: " + userName);
+
+        // Encuentra el TextView
+        TextView welcomeText = findViewById(R.id.userText);
+
+// Configura el mensaje de bienvenida
+        if (!userName.isEmpty()) {
+            String welcomeMessage = "¡Hola, " + userName + "!";
+            welcomeText.setText(welcomeMessage);
+            welcomeText.setVisibility(View.VISIBLE); // Muestra el TextView
+        }
+
+
     }
 
     // Método para obtener los productos del mismo negocio que el usuario
@@ -267,19 +285,15 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
                     Negocio negocio = response.body();
                     if (negocio != null) {
                         // Obtén el nombre del negocio
-                        String nombreNegocio = negocio.getNombre();
-                        Log.d("API Response", "Nombre del negocio obtenido: " + nombreNegocio);
+                        nombreNegocio = negocio.getNombre(); // Asigna el nombre a la variable global
 
                         // Configura el nombre del negocio como título centrado en la barra de herramientas
-                        if (getSupportActionBar() != null) {
-                            getSupportActionBar().setDisplayShowTitleEnabled(false);
-                            getSupportActionBar().setDisplayShowCustomEnabled(true);
-
-                            // Infla el diseño personalizado para el título centrado
-                            customTitle = getLayoutInflater().inflate(R.layout.custom_toolbar_title, null);
-                            toolbarTitle = customTitle.findViewById(R.id.toolbar_title); // Asigna la referencia a la variable
-                            toolbarTitle.setText(nombreNegocio);
-                            getSupportActionBar().setCustomView(customTitle);
+                        ActionBar actionBar = getSupportActionBar();
+                        if (actionBar != null) {
+                            actionBar.setDisplayShowTitleEnabled(false);
+                        }
+                        if (toolbarTitle != null) {
+                            toolbarTitle.setText("Bienvenido a " + nombreNegocio);
                         }
                     }
                 }
@@ -292,6 +306,7 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
             }
         });
     }
+
 
 
     public void updateCarritoIcon(int carritoSize) {
@@ -364,6 +379,16 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
                             // Crea un nuevo botón para la categoría
                             Button categoryButton = new Button(EntradaActivity.this);
                             categoryButton.setText(categoria.getNombre());
+
+                            // Establece el texto del botón en negrita y con un tamaño de fuente personalizado
+                            categoryButton.setTextSize(16); // Ajusta el tamaño de fuente según tus preferencias
+                            categoryButton.setTypeface(null, Typeface.BOLD); // Texto en negrita
+
+                            // Establece el color del texto (por ejemplo, blanco)
+                            categoryButton.setTextColor(Color.WHITE);
+
+                            // Establece el fondo del botón (reemplaza "mi_imagen_de_fondo" con el nombre real de la imagen en tus recursos)
+                            categoryButton.setBackgroundResource(R.drawable.bg_overlay);
 
                             // Configura el clic del botón para manejar la selección de la categoría
                             categoryButton.setOnClickListener(new View.OnClickListener() {

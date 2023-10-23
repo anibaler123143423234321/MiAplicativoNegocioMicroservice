@@ -110,7 +110,7 @@ public class ComprarActivity extends AppCompatActivity implements CompraAdapter.
     }
 
     private void initView() {
-        txtUserId = findViewById(R.id.txtUserId);
+        //txtUserId = findViewById(R.id.txtUserId);
         txtProductoId = findViewById(R.id.txtProductoId);
         txtNombreProducto = findViewById(R.id.txtNombreProducto);
         txtPrecioProducto = findViewById(R.id.txtPrecioProducto);
@@ -125,7 +125,7 @@ public class ComprarActivity extends AppCompatActivity implements CompraAdapter.
     }
 
     private void mostrarDetallesDelProducto(Long userId, Long productoId, String nombreProducto, double precioProducto, int stockProducto, String imagenProducto) {
-        txtUserId.setText("ID del Usuario: " + userId);
+        //txtUserId.setText("ID del Usuario: " + userId);
         txtProductoId.setText("ID del Producto: " + productoId);
         txtNombreProducto.setText("Nombre del Producto: " + nombreProducto);
         txtPrecioProducto.setText("Precio: $" + precioProducto);

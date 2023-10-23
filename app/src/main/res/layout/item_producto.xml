@@ -29,6 +29,7 @@
         android:textSize="16sp"
         android:layout_marginTop="4dp"/>
     <!-- Título: Categoría del Producto -->
+    <!--
     <TextView
         android:id="@+id/txtTituloCategoria"
         android:layout_width="wrap_content"
@@ -36,7 +37,9 @@
         android:text="Categoría del Producto"
         android:textSize="18sp"
         android:textStyle="bold"/>
+        -->
     <!-- Categoría del Producto -->
+    <!--
     <TextView
         android:id="@+id/txtCategoria"
         android:layout_width="wrap_content"
@@ -44,6 +47,7 @@
         android:text="Categoría del producto dinámico"
         android:textSize="16sp"
         android:layout_marginTop="4dp"/>
+        -->
     <!-- Título: Precio del Producto -->
     <TextView
         android:id="@+id/txtTituloPrecio"
@@ -95,13 +99,14 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
 
-        <Button
+        <!--<Button
             android:id="@+id/btnAddToCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_add_item"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
+            -->
     </LinearLayout>
     <View
         android:layout_width="match_parent"

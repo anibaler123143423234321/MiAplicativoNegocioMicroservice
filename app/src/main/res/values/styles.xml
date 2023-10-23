@@ -13,5 +13,16 @@
         <!-- Otros atributos de estilo, si los tienes -->
     </style>
 
+    <style name="SearchViewStyle">
+        <!-- Cambia el color del texto de la consulta -->
+        <item name="android:textColor">#000</item>
+        <!-- Cambia el tamaño del texto de la consulta -->
+        <item name="android:textSize">18sp</item>
+        <!-- Cambia el color del ícono de búsqueda -->
+        <item name="queryBackground">@android:color/white</item>
+        <!-- Cambia el hint (texto de sugerencia) -->
+        <item name="android:queryHint">Busca tu producto!</item>
+    </style>
+
 
 </resources>

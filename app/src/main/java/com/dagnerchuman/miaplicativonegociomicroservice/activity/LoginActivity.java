@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveUserData(User user) {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserDataUser", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Guarda todos los atributos del usuario

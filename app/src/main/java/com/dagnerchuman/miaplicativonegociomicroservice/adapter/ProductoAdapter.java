@@ -69,7 +69,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         Producto producto = filteredList.get(position); // Cambiar productList a filteredList
 
         holder.txtNombre.setText(producto.getNombre());
-        holder.txtCategoria.setText(String.valueOf(producto.getCategoriaId()));
+        //holder.txtCategoria.setText(String.valueOf(producto.getCategoriaId()));
         holder.txtPrecio.setText("$" + producto.getPrecio());
         holder.txtStock.setText(String.valueOf(producto.getStock()));
 
@@ -91,13 +91,14 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             }
         });
 
+        /**
         holder.btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addProductToCart(producto); // Agregar el producto al carrito
             }
         });
-
+*/
     }
 
     @Override
@@ -110,7 +111,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         filteredList.clear();
 
         if (query.isEmpty()) {
-            filteredList.addAll(productList); // Restablecer la lista completa cuando la consulta está vacía
+            // Mostrar todos los productos cuando la consulta esté vacía
+            filteredList.addAll(productList);
         } else {
             for (Producto producto : productList) {
                 String nombre = producto.getNombre().toLowerCase();
@@ -125,6 +127,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
 
 
+
     public class ProductoViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProducto;
         TextView txtNombre, txtCategoria, txtPrecio, txtStock;
@@ -135,11 +138,11 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
             super(itemView);
             imgProducto = itemView.findViewById(R.id.imgProducto);
             txtNombre = itemView.findViewById(R.id.txtNombre);
-            txtCategoria = itemView.findViewById(R.id.txtCategoria);
+            //txtCategoria = itemView.findViewById(R.id.txtCategoria);
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
             txtStock = itemView.findViewById(R.id.txtStock);
             btnComprar = itemView.findViewById(R.id.btnComprar);
-            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
+           // btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }
     }
 
@@ -162,25 +165,18 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         }
     }
 
+    /**
     private void addProductToCart(Producto producto) {
         if (!carrito.contains(producto)) {
             carrito.add(producto); // Agregar el producto al carrito
-            entradaActivity.addToCart(producto);
+            entradaActivity.addToCart(producto); // Llama al método en EntradaActivity para actualizar el carrito
             Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
-
-            // Agregar un log para mostrar el listado completo de productos en el carrito
-            Log.d("Carrito de Compras", "Listado de productos en el carrito:");
-            for (Producto p : carrito) {
-                Log.d("Carrito de Compras", "Nombre: " + p.getNombre() + ", ID: " + p.getId());
-            }
         } else {
             Toast.makeText(context, "Este producto ya está en el carrito", Toast.LENGTH_SHORT).show();
         }
-
-        // Actualizar el ícono del carrito en la actividad de EntradaActivity
-        entradaActivity.updateCarritoIcon(carrito.size()); // Usar el tamaño actual del carrito
     }
 
+*/
 
     public interface OnProductSelectedListener {
         void onProductSelected(Producto producto);

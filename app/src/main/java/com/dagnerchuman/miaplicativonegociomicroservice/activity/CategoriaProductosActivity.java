@@ -1,7 +1,11 @@
 package com.dagnerchuman.miaplicativonegociomicroservice.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,17 +26,28 @@ public class CategoriaProductosActivity extends AppCompatActivity {
     private List<Producto> productList = new ArrayList<>();
     private RecyclerView recyclerView;
     private CategoriaAdapter adapter;
-
+    private ImageButton btnBackToLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categoria_productos);
 
         recyclerView = findViewById(R.id.recyclerViewProductos);
+        btnBackToLogin = findViewById(R.id.btnBackToLogin);
 
         adapter = new CategoriaAdapter(this, productList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        // Configuración del botón de retroceso
+        btnBackToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent loginIntent = new Intent(CategoriaProductosActivity.this, EntradaActivity.class);
+                startActivity(loginIntent);
+                finish();
+            }
+        });
 
         // Obtén el ID de la categoría seleccionada de la actividad anterior
         long categoriaId = getIntent().getLongExtra("categoriaSeleccionada", -1);

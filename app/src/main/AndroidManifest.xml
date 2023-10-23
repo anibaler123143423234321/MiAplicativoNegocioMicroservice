@@ -46,6 +46,10 @@
             android:label="Categoría de Productos">
         </activity>
 
+        <activity
+            android:name=".activity.ListadoDeComprasActivity"
+            android:label="Listado de Compras">
+        </activity>
 
         <!-- Actividad de inicio de sesión (LoginActivity) -->
         <activity

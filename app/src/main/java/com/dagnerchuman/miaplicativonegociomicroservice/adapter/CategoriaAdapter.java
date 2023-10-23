@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.dagnerchuman.miaplicativonegociomicroservice.R;
 import com.dagnerchuman.miaplicativonegociomicroservice.activity.ComprarActivity;
 import com.dagnerchuman.miaplicativonegociomicroservice.activity.EntradaActivity;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.CarritoItem;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
 
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
     private Context context;
     private List<Producto> productList;
     private EntradaActivity entradaActivity;
-    private List<Producto> carrito;
+    private List<CarritoItem> carrito;  // Agrega esta lista para llevar un registro del carrito.
+
 
     public CategoriaAdapter(Context context, List<Producto> productList) {
         this.context = context;
@@ -71,14 +73,34 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
                 handleCompra(producto);
             }
         });
-/**
-        holder.btnAddToCart.setOnClickListener(new View.OnClickListener() {
+
+        holder.btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductToCart(producto);
+                // Convertir los valores de Long y Double a int y double respectivamente.
+                agregarAlCarrito(producto.getId().intValue(), producto.getNombre(), 1, producto.getPrecio().doubleValue());
             }
         });
-   */
+
+        holder.btnAnadirCarrito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("Añadir al carrito", "Botón Añadir al carrito clicado");
+                Log.d("Añadir al carrito", "Producto ID: " + producto.getId());
+                Log.d("Añadir al carrito", "Nombre: " + producto.getNombre());
+                Log.d("Añadir al carrito", "Cantidad: 1"); // Siempre agregamos 1
+                Log.d("Añadir al carrito", "Precio: $" + producto.getPrecio());
+
+                // Agregar lógica para añadir el producto al carrito aquí
+                // Puedes utilizar una lista para mantener un registro de los productos en el carrito.
+                // Por employee:
+                CarritoItem carritoItem = new CarritoItem(producto.getId().intValue(), producto.getNombre(), 1, producto.getPrecio());
+                carrito.add(carritoItem);
+                // Puedes mostrar un mensaje al usuario o realizar otras acciones si es necesario.
+            }
+        });
+
     }
 
     @Override
@@ -89,7 +111,8 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
     public class ProductoViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProducto;
         TextView txtNombre, txtCategoria, txtPrecio, txtStock;
-        Button btnComprar, btnAddToCart;
+        Button btnComprar;
+        Button btnAnadirCarrito; // Nombre actualizado del botón
 
         public ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,7 +122,7 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
             txtPrecio = itemView.findViewById(R.id.txtPrecio);
             txtStock = itemView.findViewById(R.id.txtStock);
             btnComprar = itemView.findViewById(R.id.btnComprar);
-            //btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
+            btnAnadirCarrito = itemView.findViewById(R.id.btnAnadirCarrito); // Nombre actualizado del botón
         }
     }
 
@@ -122,20 +145,26 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.Prod
         }
     }
 
-    /**
-    private void addProductToCart(Producto producto) {
-        if (!carrito.contains(producto)) {
-            carrito.add(producto);
-            entradaActivity.addToCart(producto);
-            Toast.makeText(context, "Producto agregado al carrito", Toast.LENGTH_SHORT).show();
-
-            Log.d("Carrito de Compras", "Listado de productos en el carrito:");
-            for (Producto p : carrito) {
-                Log.d("Carrito de Compras", "Nombre: " + p.getNombre() + ", ID: " + p.getId());
+    private void agregarAlCarrito(int productoId, String nombre, int cantidad, double precio) {
+        // Verificar si el producto ya está en el carrito.
+        for (CarritoItem item : carrito) {
+            if (item.getProductoId() == productoId) {
+                // El producto ya está en el carrito, aumenta la cantidad.
+                item.setCantidad(item.getCantidad() + 1);
+                notifyDataSetChanged();  // Notificar cambios en el adaptador.
+                return;
             }
-        } else {
-            Toast.makeText(context, "Este producto ya está en el carrito", Toast.LENGTH_SHORT).show();
         }
+
+        // Si el producto no está en el carrito, agrégalo como nuevo.
+        CarritoItem carritoItem = new CarritoItem(productoId, nombre, cantidad, precio);
+        carrito.add(carritoItem);
+        notifyDataSetChanged();  // Notificar cambios en el adaptador.
     }
-     */
+
+
+    public List<CarritoItem> getCarrito() {
+        return carrito;
+    }
+
 }

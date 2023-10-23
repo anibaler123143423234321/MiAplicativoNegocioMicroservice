@@ -51,6 +51,11 @@
             android:label="Listado de Compras">
         </activity>
 
+        <activity
+            android:name=".activity.CarritoActivity"
+            android:label="Carrito de Compras">
+        </activity>
+
         <!-- Actividad de inicio de sesión (LoginActivity) -->
         <activity
             android:name=".activity.SplashActivity"

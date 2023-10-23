@@ -22,6 +22,16 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
+        <ImageButton
+            android:id="@+id/btnCarrito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Ver carrito"
+            android:padding="8dp"
+            android:src="@drawable/ic_add_shop" />
+
+
         <!-- Botón para regresar a LoginActivity -->
         <ImageButton
             android:id="@+id/btnBackToLogin"

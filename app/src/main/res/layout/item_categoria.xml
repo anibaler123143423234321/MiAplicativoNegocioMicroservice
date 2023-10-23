@@ -98,16 +98,27 @@
             android:background="@drawable/ic_add_shop"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
-<!--
-        <Button
-            android:id="@+id/btnAddToCart"
+
+        <!-- Botones en un LinearLayout horizontal -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_add_item"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnAnadirCarrito"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Añadir al carrito"
+                android:textSize="16sp" />
+        </LinearLayout>
 
-            -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#C0C0C0" />
+
     </LinearLayout>
     <View
         android:layout_width="match_parent"

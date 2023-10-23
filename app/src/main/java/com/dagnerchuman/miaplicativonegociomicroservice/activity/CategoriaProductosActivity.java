@@ -3,6 +3,9 @@ package com.dagnerchuman.miaplicativonegociomicroservice.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -14,25 +17,31 @@ import com.dagnerchuman.miaplicativonegociomicroservice.R;
 import com.dagnerchuman.miaplicativonegociomicroservice.adapter.CategoriaAdapter;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ApiServiceProductos;
 import com.dagnerchuman.miaplicativonegociomicroservice.api.ConfigApi;
+import com.dagnerchuman.miaplicativonegociomicroservice.entity.CarritoItem;
 import com.dagnerchuman.miaplicativonegociomicroservice.entity.Producto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+
 public class CategoriaProductosActivity extends AppCompatActivity {
     private List<Producto> productList = new ArrayList<>();
     private RecyclerView recyclerView;
     private CategoriaAdapter adapter;
-    private ImageButton btnBackToLogin;
+    private ImageButton btnBackToLogin, btnCarrito;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categoria_productos);
 
         recyclerView = findViewById(R.id.recyclerViewProductos);
+        btnCarrito = findViewById(R.id.btnCarrito);
         btnBackToLogin = findViewById(R.id.btnBackToLogin);
 
         adapter = new CategoriaAdapter(this, productList);
@@ -46,6 +55,17 @@ public class CategoriaProductosActivity extends AppCompatActivity {
                 Intent loginIntent = new Intent(CategoriaProductosActivity.this, EntradaActivity.class);
                 startActivity(loginIntent);
                 finish();
+            }
+        });
+
+        // Configuración del botón del carrito
+        btnCarrito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Abre la actividad del carrito cuando se hace clic en el ícono del carrito.
+                Intent carritoIntent = new Intent(CategoriaProductosActivity.this, CarritoActivity.class);
+                carritoIntent.putExtra("productosEnCarrito", new ArrayList<>(productList)); // Envia la lista de productos al carrito
+                startActivity(carritoIntent);
             }
         });
 
@@ -103,4 +123,40 @@ public class CategoriaProductosActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_categoria, menu);
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_cart) {
+            // Abre la actividad del carrito cuando se hace clic en el ícono del carrito.
+            Intent intent = new Intent(this, CarritoActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void abrirCarrito() {
+        // Crea una lista de elementos de prueba para el carrito (sustituye por tus propios elementos).
+        List<CarritoItem> carrito = new ArrayList<>();
+
+        // Crea una Intent y agrega los datos del carrito como extras.
+        Intent carritoIntent = new Intent(CategoriaProductosActivity.this, CarritoActivity.class);
+        carritoIntent.putExtra("carritoItems", (Serializable) carrito);
+
+        // Inicia la actividad CarritoActivity.
+        startActivity(carritoIntent);
+    }
+
 }

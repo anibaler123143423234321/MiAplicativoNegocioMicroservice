@@ -153,7 +153,11 @@ public class LoginActivity extends AppCompatActivity {
         // Agrega más atributos según las propiedades de la clase User
 
         editor.apply();
+
+        // Agregar una impresión de registro para verificar que el token se almacena correctamente
+        Log.d("TokenGuardado", "Token guardado en SharedPreferences: " + user.getToken());
     }
+
 
 
     @Override

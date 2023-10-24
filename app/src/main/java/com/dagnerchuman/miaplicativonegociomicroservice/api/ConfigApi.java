@@ -8,7 +8,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConfigApi {
-    // 10.0.2.2
     private static final String BASE_URL = "https://dotval-app-982770f3e239.herokuapp.com/";
     private static final String SHARED_PREFERENCES_NAME = "UserData";
     private static final String KEY_AUTH_TOKEN = "userToken";
@@ -20,7 +19,6 @@ public class ConfigApi {
     private static ApiServiceCategorias apiServiceCategorias;
 
     public static ApiService getInstance(Context context) {
-        // Obtain the token from SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
 
@@ -36,7 +34,7 @@ public class ConfigApi {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(httpClient.build()) // Set the custom OkHttpClient
+                    .client(httpClient.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -46,14 +44,12 @@ public class ConfigApi {
     }
 
     public static ApiServiceNegocio getInstanceNegocio(Context context) {
-        // Obtain the token from SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
 
         if (apiServiceNegocio == null) {
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             if (!authToken.isEmpty()) {
-                // Agrega el encabezado de autorización con el token Bearer si authToken no está vacío
                 httpClient.addInterceptor(chain -> {
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder()
@@ -75,7 +71,6 @@ public class ConfigApi {
     }
 
     public static ApiServiceProductos getInstanceProducto(Context context) {
-        // Obtain the token from SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
 
@@ -91,7 +86,7 @@ public class ConfigApi {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(httpClient.build()) // Set the custom OkHttpClient
+                    .client(httpClient.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -101,7 +96,6 @@ public class ConfigApi {
     }
 
     public static ApiServiceCompras getInstanceCompra(Context context) {
-        // Obtain the token from SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
 
@@ -117,7 +111,7 @@ public class ConfigApi {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(httpClient.build()) // Set the custom OkHttpClient
+                    .client(httpClient.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -127,8 +121,6 @@ public class ConfigApi {
     }
 
     public static ApiServiceCategorias getInstanceCategorias(Context context) {
-
-        // Obtain the token from SharedPreferences
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         String authToken = sharedPreferences.getString(KEY_AUTH_TOKEN, "");
 
@@ -142,10 +134,9 @@ public class ConfigApi {
                 return chain.proceed(request);
             });
 
-
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(httpClient.build()) // Set the custom OkHttpClient
+                    .client(httpClient.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -153,6 +144,4 @@ public class ConfigApi {
         }
         return apiServiceCategorias;
     }
-
-
 }

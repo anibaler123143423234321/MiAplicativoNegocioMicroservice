@@ -19,7 +19,6 @@ public interface ApiServiceProductos {
     String baseUser = "gateway/producto";
 
     @Headers("Authorization: Bearer")
-
     @POST(baseUser)
     Call<Producto> saveProducto(@Body Producto producto);
 
@@ -27,6 +26,7 @@ public interface ApiServiceProductos {
     @DELETE(baseUser + "/{productoId}")
     Call<Void> deleteProducto(@Path("productoId") Long productoId);
 
+    @Headers("Authorization: Bearer")
     @GET(baseUser)
     Call<List<Producto>> getAllProductos();
 

@@ -182,41 +182,7 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
 
     }
 
-    // Método para obtener los productos del mismo negocio que el usuario
-    private void obtenerProductosDelNegocio(Long userNegocioId) {
-        ApiServiceProductos apiService = ConfigApi.getInstanceProducto(this);
 
-        Call<List<Producto>> call = apiService.getAllProductos();
-
-        call.enqueue(new Callback<List<Producto>>() {
-            @Override
-            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
-                if (response.isSuccessful()) {
-                    List<Producto> productos = response.body();
-
-                    // Filtra los productos que pertenecen al mismo negocio que el usuario
-                    List<Producto> productosDelNegocio = new ArrayList<>();
-                    for (Producto producto : productos) {
-                        if (producto.getNegocioId().equals(userNegocioId)) {
-                            productosDelNegocio.add(producto);
-                        }
-                    }
-
-                    // Actualiza la lista de productos en el adaptador
-                    productosList.addAll(productosDelNegocio);
-
-                    Log.d("API Response", "Respuesta exitosa");
-                } else {
-                    Log.e("API Response", "Respuesta no exitosa: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Producto>> call, Throwable t) {
-                Log.e("API Failure", "Fallo en la solicitud a la API", t);
-            }
-        });
-    }
 
     private void mostrarPopupMisDatos() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -307,7 +273,41 @@ public class EntradaActivity extends AppCompatActivity implements ProductoAdapte
         });
     }
 
+    // Método para obtener los productos del mismo negocio que el usuario
+    private void obtenerProductosDelNegocio(Long userNegocioId) {
+        ApiServiceProductos apiService = ConfigApi.getInstanceProducto(this);
 
+        Call<List<Producto>> call = apiService.getAllProductos();
+
+        call.enqueue(new Callback<List<Producto>>() {
+            @Override
+            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
+                if (response.isSuccessful()) {
+                    List<Producto> productos = response.body();
+
+                    // Filtra los productos que pertenecen al mismo negocio que el usuario
+                    List<Producto> productosDelNegocio = new ArrayList<>();
+                    for (Producto producto : productos) {
+                        if (producto.getNegocioId().equals(userNegocioId)) {
+                            productosDelNegocio.add(producto);
+                        }
+                    }
+
+                    // Actualiza la lista de productos en el adaptador
+                    productosList.addAll(productosDelNegocio);
+
+                    Log.d("API Response", "Respuesta exitosa");
+                } else {
+                    Log.e("API Response", "Respuesta no exitosa: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Producto>> call, Throwable t) {
+                Log.e("API Failure", "Fallo en la solicitud a la API", t);
+            }
+        });
+    }
 
     public void updateCarritoIcon(int carritoSize) {
         productosEnCarrito = carritoSize;
